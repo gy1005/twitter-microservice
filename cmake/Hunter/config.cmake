@@ -1,0 +1,1 @@
+ hunter_config(thrift VERSION 0.11.0-p0 CMAKE_ARGS WITH_LIBEVENT=ON)

@@ -1,0 +1,46 @@
+ComposeService:
+- addr: localhost
+- port: 9000
+
+TweetService:
+- addr: localhost
+- port: 9001
+
+UserService:
+- addr: localhost
+- port: 9002
+
+FileService:
+- addr: localhost
+- port: 9003
+
+TweetMemcached:
+- addr: localhost
+- port: 10000
+
+TweetMongoDB:
+- addr: localhost
+- port: 10001
+
+UserMemcached:
+- addr: localhost
+- port: 10002
+
+UserMongoDB:
+- addr: localhost
+- port: 10003
+
+FileMemcached:
+- addr: localhost
+- port: 10004
+
+FileMongoDB:
+- addr: localhost
+- port: 10005
+
+
+
+
+
+
+
