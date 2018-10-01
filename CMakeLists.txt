@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
-# Using hunter to resolve dependencies.
+# Using hunter to resolve dependencies.pigpass
+
 include("cmake/HunterGate.cmake")
 HunterGate(
         URL "https://github.com/ruslo/hunter/archive/v0.23.28.tar.gz"
@@ -15,10 +16,7 @@ set(CMAKE_CXX_STANDARD 17)
 hunter_add_package(thrift)
 find_package(thrift CONFIG REQUIRED)
 
-hunter_add_package(yaml-cpp)
-find_package(yaml-cpp CONFIG REQUIRED)
-
-find_package(libmongoc-1.0 1.9 REQUIRED)
+find_package(libmongoc-1.0 1.13 REQUIRED)
 
 include("cmake/Findlibmemcached.cmake")
 INCLUDE_DIRECTORIES(${LIBMEMCACHED_INCLUDE_DIR})
@@ -43,16 +41,15 @@ target_link_libraries(UserService PUBLIC
         thrift::thriftnb_static
         twitter_thrift
         )
-target_include_directories(UserService PRIVATE
+target_include_directories(UserService PUBLIC
         "${MONGOC_INCLUDE_DIRS}"
         )
-target_link_libraries(UserService PRIVATE
+target_link_libraries(UserService PUBLIC
         "${MONGOC_LIBRARIES}"
         "${LIBMEMCACHED_LIBRARY}"
         nlohmann_json::nlohmann_json
-        yaml-cpp::yaml-cpp
         )
-target_compile_definitions(UserService PRIVATE
+target_compile_definitions(UserService PUBLIC
         "${MONGOC_DEFINITIONS}"
         )
 
@@ -64,37 +61,36 @@ target_link_libraries(FileService PUBLIC
         thrift::thriftnb_static
         twitter_thrift
         )
-target_include_directories(FileService PRIVATE
+target_include_directories(FileService PUBLIC
         "${MONGOC_INCLUDE_DIRS}"
         )
-target_link_libraries(FileService PRIVATE
+target_link_libraries(FileService PUBLIC
         "${MONGOC_LIBRARIES}"
         "${LIBMEMCACHED_LIBRARY}"
         nlohmann_json::nlohmann_json
-        yaml-cpp::yaml-cpp
         )
-target_compile_definitions(FileService PRIVATE
+target_compile_definitions(FileService PUBLIC
         "${MONGOC_DEFINITIONS}"
         )
 
 add_executable(TweetService
         src/TweetService.cc
         )
+
 target_link_libraries(TweetService PUBLIC
         thrift::thrift_static
         thrift::thriftnb_static
         twitter_thrift
         )
-target_include_directories(TweetService PRIVATE
+target_include_directories(TweetService PUBLIC
         "${MONGOC_INCLUDE_DIRS}"
         )
-target_link_libraries(TweetService PRIVATE
+target_link_libraries(TweetService PUBLIC
         "${MONGOC_LIBRARIES}"
         "${LIBMEMCACHED_LIBRARY}"
         nlohmann_json::nlohmann_json
-        yaml-cpp::yaml-cpp
         )
-target_compile_definitions(TweetService PRIVATE
+target_compile_definitions(TweetService PUBLIC
         "${MONGOC_DEFINITIONS}"
         )
 
@@ -106,15 +102,14 @@ target_link_libraries(ComposeService PUBLIC
         thrift::thriftnb_static
         twitter_thrift
         )
-target_include_directories(ComposeService PRIVATE
+target_include_directories(ComposeService PUBLIC
         "${MONGOC_INCLUDE_DIRS}"
         )
-target_link_libraries(ComposeService PRIVATE
+target_link_libraries(ComposeService PUBLIC
         "${MONGOC_LIBRARIES}"
         "${LIBMEMCACHED_LIBRARY}"
         nlohmann_json::nlohmann_json
-        yaml-cpp::yaml-cpp
         )
-target_compile_definitions(ComposeService PRIVATE
+target_compile_definitions(ComposeService PUBLIC
         "${MONGOC_DEFINITIONS}"
         )
