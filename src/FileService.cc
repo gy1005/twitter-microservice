@@ -3,6 +3,9 @@
 //
 
 #include <thrift/protocol/TBinaryProtocol.h>
+#include <thrift/server/TThreadedServer.h>
+#include <thrift/transport/TServerSocket.h>
+#include <thrift/transport/TBufferTransports.h>
 
 #include "../include/Utils.h"
 #include "FileService.h"

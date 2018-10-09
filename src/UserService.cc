@@ -2,6 +2,8 @@
 // Created by yugan on 9/30/18.
 //
 
+
+#include <thrift/server/TThreadedServer.h>
 #include <thrift/protocol/TBinaryProtocol.h>
 
 #include "../include/Utils.h"

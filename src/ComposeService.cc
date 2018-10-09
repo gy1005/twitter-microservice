@@ -3,6 +3,9 @@
 //
 
 #include <thrift/protocol/TBinaryProtocol.h>
+#include <thrift/server/TThreadedServer.h>
+#include <thrift/transport/TServerSocket.h>
+#include <thrift/transport/TBufferTransports.h>
 
 #include "../include/Utils.h"
 #include "ComposeService.h"
@@ -59,7 +62,7 @@ int main(int argc, char *argv[]) {
   auto file_client_pool = make_shared<ClientPool<ThriftCLient<
       FileServiceClient>>>(CLIENT_POOL_SIZE, file_addr, file_port);
 
-  TThreadedServer server(
+  TThreadedServer threaded_server(
       stdcxx::make_shared<ComposeServiceProcessor>(
           stdcxx::make_shared<ComposeServiceHandler>(tweet_client_pool,
                                                      user_client_pool,
@@ -70,7 +73,7 @@ int main(int argc, char *argv[]) {
   );
 
   cout << "Starting the server..." << endl;
-  server.serve();
+    threaded_server.serve();
   cout << "Done." << endl;
 }
 
