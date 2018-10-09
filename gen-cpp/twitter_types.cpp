@@ -28,7 +28,6 @@ void Tweet_::__set_user_id(const std::string& val) {
 
 void Tweet_::__set_file_id(const std::string& val) {
   this->file_id = val;
-__isset.file_id = true;
 }
 
 void Tweet_::__set_text(const std::string& val) {
@@ -119,11 +118,10 @@ uint32_t Tweet_::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->user_id);
   xfer += oprot->writeFieldEnd();
 
-  if (this->__isset.file_id) {
-    xfer += oprot->writeFieldBegin("file_id", ::apache::thrift::protocol::T_STRING, 3);
-    xfer += oprot->writeString(this->file_id);
-    xfer += oprot->writeFieldEnd();
-  }
+  xfer += oprot->writeFieldBegin("file_id", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->file_id);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldBegin("text", ::apache::thrift::protocol::T_STRING, 4);
   xfer += oprot->writeString(this->text);
   xfer += oprot->writeFieldEnd();
@@ -162,7 +160,7 @@ void Tweet_::printTo(std::ostream& out) const {
   out << "Tweet_(";
   out << "tweet_id=" << to_string(tweet_id);
   out << ", " << "user_id=" << to_string(user_id);
-  out << ", " << "file_id="; (__isset.file_id ? (out << to_string(file_id)) : (out << "<null>"));
+  out << ", " << "file_id=" << to_string(file_id);
   out << ", " << "text=" << to_string(text);
   out << ")";
 }
@@ -430,7 +428,6 @@ void Tweet::__set_text(const std::string& val) {
 
 void Tweet::__set_file(const File_& val) {
   this->file = val;
-__isset.file = true;
 }
 std::ostream& operator<<(std::ostream& out, const Tweet& obj)
 {
@@ -521,11 +518,10 @@ uint32_t Tweet::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->text);
   xfer += oprot->writeFieldEnd();
 
-  if (this->__isset.file) {
-    xfer += oprot->writeFieldBegin("file", ::apache::thrift::protocol::T_STRUCT, 4);
-    xfer += this->file.write(oprot);
-    xfer += oprot->writeFieldEnd();
-  }
+  xfer += oprot->writeFieldBegin("file", ::apache::thrift::protocol::T_STRUCT, 4);
+  xfer += this->file.write(oprot);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -561,7 +557,7 @@ void Tweet::printTo(std::ostream& out) const {
   out << "tweet_id=" << to_string(tweet_id);
   out << ", " << "user=" << to_string(user);
   out << ", " << "text=" << to_string(text);
-  out << ", " << "file="; (__isset.file ? (out << to_string(file)) : (out << "<null>"));
+  out << ", " << "file=" << to_string(file);
   out << ")";
 }
 

@@ -67,20 +67,18 @@ void FileServiceHandler::getFile_(File_ &_return, const string &file_id) {
   uint32_t memcached_flags;
 
   // Find the user in the memcached
-  string memcached_data(
-      memcached_get(
-          memcached_client,
-          file_id.c_str(),
-          file_id.length(),
-          &memcached_data_size,
-          &memcached_flags,
-          &memcached_rc)
-  );
+  char *memcached_data = memcached_get(
+      memcached_client,
+      file_id.c_str(),
+      file_id.length(),
+      &memcached_data_size,
+      &memcached_flags,
+      &memcached_rc);
 
-  if (!memcached_data.empty()) {
+  if (memcached_data) {
     // If the user is in memcached, return the data.
-
-    json data_json = json::parse(memcached_data);
+    string memcached_str = memcached_data;
+    json data_json = json::parse(memcached_str);
     _return.file_id = data_json["file_id"];
     _return.content = data_json["content"];
     assert(_return.file_id == file_id);

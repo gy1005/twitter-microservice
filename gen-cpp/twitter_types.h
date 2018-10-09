@@ -66,9 +66,7 @@ class Tweet_ : public virtual ::apache::thrift::TBase {
       return false;
     if (!(user_id == rhs.user_id))
       return false;
-    if (__isset.file_id != rhs.__isset.file_id)
-      return false;
-    else if (__isset.file_id && !(file_id == rhs.file_id))
+    if (!(file_id == rhs.file_id))
       return false;
     if (!(text == rhs.text))
       return false;
@@ -232,9 +230,7 @@ class Tweet : public virtual ::apache::thrift::TBase {
       return false;
     if (!(text == rhs.text))
       return false;
-    if (__isset.file != rhs.__isset.file)
-      return false;
-    else if (__isset.file && !(file == rhs.file))
+    if (!(file == rhs.file))
       return false;
     return true;
   }

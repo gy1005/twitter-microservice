@@ -84,20 +84,18 @@ void UserServiceHandler::getUser_(User_ &_return, const string &user_id) {
   uint32_t memcached_flags;
 
   // Find the user in the memcached
-  string memcached_data(
-      memcached_get(
-          memcached_client,
-          user_id.c_str(),
-          user_id.length(),
-          &memcached_data_size,
-          &memcached_flags,
-          &memcached_rc)
-  );
+  char *memcached_data = memcached_get(
+      memcached_client,
+      user_id.c_str(),
+      user_id.length(),
+      &memcached_data_size,
+      &memcached_flags,
+      &memcached_rc);
 
-  if (!memcached_data.empty()) {
+  if (memcached_data) {
     // If the user is in memcached, return the data.
-
-    json data_json = json::parse(memcached_data);
+    string memcached_str = memcached_data;
+    json data_json = json::parse(memcached_str);
     _return.username = data_json["username"];
     _return.user_id = data_json["user_id"];
     _return.homepage = data_json["homepage"];

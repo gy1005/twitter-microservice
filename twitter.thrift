@@ -1,12 +1,10 @@
 namespace cpp twitter
-namespace php twitter
 namespace py twitter
-namespace lua twitter
 
 struct Tweet_ {
     1: string tweet_id
     2: string user_id
-    3: optional string file_id
+    3: string file_id
     4: string text
 }
 
@@ -25,7 +23,7 @@ struct Tweet {
     1: string tweet_id
     2: User_ user
     3: string text
-    4: optional File_ file
+    4: File_ file
 }
 
 
