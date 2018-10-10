@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import pymongo as pm
 from optparse import OptionParser
 from multiprocessing import Process

@@ -134,7 +134,7 @@ void FileServiceHandler::getFile_(File_ &_return, const string &file_id,
   }
   mongoc_client_destroy(mongodb_client);
   memcached_free(memcached_client);
-  append_timestamp("File", "getFile_start", timestamps_return_, nullptr);
+  append_timestamp("File", "getFile_end", timestamps_return_, nullptr);
   _return.timestamps = timestamps_return_;
 
 }

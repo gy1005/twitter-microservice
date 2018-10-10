@@ -114,33 +114,39 @@ void ComposeServiceHandler::getTweetHelper_(
     const string &tweet_id,
     vector<Timestamp> &timestamps,
     mutex *mtx) {
-  append_timestamp("Compose", "getTweet_start", timestamps, mtx);
+
   auto tweet_client = this->tweet_client_pool_->getClient();
+  append_timestamp("Compose", "getTweet_start", timestamps, mtx);
   tweet_client->getClient()->getTweet_(_return, tweet_id, vector<Timestamp>());
-  this->tweet_client_pool_->returnClient(tweet_client->getId());
   append_timestamp("Compose", "getTweet_end", timestamps, mtx);
+  this->tweet_client_pool_->returnClient(tweet_client->getId());
+
 }
 
 void ComposeServiceHandler::getUserHelper_(
     User_ &_return, const string &user_id,
     vector<Timestamp> &timestamps,
     mutex *mtx) {
-  append_timestamp("Compose", "getUser_start", timestamps, mtx);
+
   auto user_client = this->user_client_pool_->getClient();
+  append_timestamp("Compose", "getUser_start", timestamps, mtx);
   user_client->getClient()->getUser_(_return, user_id, vector<Timestamp>());
-  this->user_client_pool_->returnClient(user_client->getId());
   append_timestamp("Compose", "getUser_end", timestamps, mtx);
+  this->user_client_pool_->returnClient(user_client->getId());
+
 }
 
 void ComposeServiceHandler::getFileHelper_(
     File_ &_return, const string &file_id,
     vector<Timestamp> &timestamps,
     mutex *mtx) {
-  append_timestamp("Compose", "getFile_start", timestamps, mtx);
+
   auto file_client = this->file_client_pool_->getClient();
+  append_timestamp("Compose", "getFile_start", timestamps, mtx);
   file_client->getClient()->getFile_(_return, file_id, vector<Timestamp>());
-  this->file_client_pool_->returnClient(file_client->getId());
   append_timestamp("Compose", "getFile_end", timestamps, mtx);
+  this->file_client_pool_->returnClient(file_client->getId());
+
 }
 
 

@@ -33,14 +33,22 @@ def main():
   transport.open()
 
   print("conn open")
-  id = random.randint(1, 1000000)
+  id = random.randint(0, 1000)
   user_id = "user_" + str(id)
   tweet_id = "tweet_" + str(id)
   res = client.getTweet(user_id, tweet_id, [])
-  print(res.tweet_id, res.text,
-        res.user.user_id, res.user.username, res.user.homepage,
-        res.file.file_id, res.file.content,
-        res.timestamps)
+  # print(res.tweet_id, res.text,
+  #       res.user.user_id, res.user.username, res.user.homepage,
+  #       res.file.file_id, res.file.content,
+  #       res.timestamps)
+
+  base_time = res.timestamps[0].timestamp
+  for i in range(len(res.timestamps)):
+    res.timestamps[i].timestamp = res.timestamps[i].timestamp - \
+                                  base_time
+
+  for timestamp in res.timestamps:
+    print(timestamp)
 
 
   transport.close()

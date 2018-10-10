@@ -16,7 +16,7 @@
 #include "../include/Utils.h"
 
 
-#define N_RECORDS 999
+#define N_RECORDS 1000
 
 using namespace std;
 using namespace apache::thrift;
@@ -25,18 +25,28 @@ using namespace apache::thrift::transport;
 using namespace twitter;
 
 
-
 std::random_device rd;
 std::mt19937 gen(rd());
 std::uniform_int_distribution<> dist(0, N_RECORDS - 1);
 
-void worker(
+long get_timestamp (
+    const vector<Timestamp> &timestamps,
+    const string &service_key,
+    const string &func_key) {
+  for (const auto& t : timestamps) {
+    if (t.service_name == service_key && t.function_name == func_key)
+      return t.timestamp;
+  }
+  return -1;
+}
+
+void client_worker(
     const int tid,
     const string &addr,
     const int port,
     int qps,
     int duration,
-    list<int64_t> &reqs_latency,
+    list<map<string, long>> &reqs_latency,
     int &n_reqs_sent
 
     ) {
@@ -52,25 +62,113 @@ void worker(
   auto next_send_time = thread_start_time;
   try {
     transport->open();
-    while (chrono::high_resolution_clock::now() < thread_start_time + chrono::microseconds(duration_us)){
+    while (chrono::high_resolution_clock::now() < thread_start_time
+        + chrono::microseconds(duration_us)) {
       while (chrono::high_resolution_clock::now() < next_send_time) {
-        int64_t sleep_time_us = (next_send_time - chrono::high_resolution_clock::now()).count() / 1000;
+        int64_t sleep_time_us = (next_send_time
+            - chrono::high_resolution_clock::now()).count() / 1000;
         sleep_time_us = max(sleep_time_us, (long)0);
         if (sleep_time_us)
           this_thread::sleep_for(chrono::microseconds(sleep_time_us));
       }
-      auto start_time = chrono::high_resolution_clock::now();
 
       Tweet _return_tweet;
       int id = dist(gen);
       string user_id = "user_" + to_string(id);
       string tweet_id = "tweet_" + to_string(id);
       vector<Timestamp> timestamps;
-      client.getTweet(_return_tweet, user_id, tweet_id, timestamps);
+      map<string, long> latency;
 
-      auto end_time = chrono::high_resolution_clock::now();
-      auto req_latency = (end_time - start_time).count() / 1000;
-      reqs_latency.push_back(req_latency);
+//      append_timestamp("Client", "start", timestamps, nullptr);
+      auto start_time = duration_cast<microseconds>(
+          system_clock::now().time_since_epoch()).count();
+      client.getTweet(_return_tweet, user_id, tweet_id, timestamps);
+      auto end_time = duration_cast<microseconds>(
+          system_clock::now().time_since_epoch()).count();
+
+//      append_timestamp("Client", "end", _return_tweet.timestamps, nullptr);
+
+      latency["total"] = end_time - start_time;
+
+     latency["client_send:compose_start"] =
+         get_timestamp(_return_tweet.timestamps, "Compose", "compose_start") -
+         start_time;
+     latency["compose_start:compose_send_tweet"] =
+         get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start") -
+         get_timestamp(_return_tweet.timestamps, "Compose", "compose_start");
+     latency["compose_send_tweet:compose_send_user"] =
+         get_timestamp(_return_tweet.timestamps, "Compose", "getUser_start") -
+         get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start");
+     latency["compose_send_tweet:compose_recv_tweet"] =
+         get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_end") -
+         get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start");
+     latency["compose_send_user:compose_recv_user"] =
+         get_timestamp(_return_tweet.timestamps, "Compose", "getUser_end") -
+         get_timestamp(_return_tweet.timestamps, "Compose", "getUser_start");
+     latency["compose_recv_tweet:compose_send_file"] =
+         get_timestamp(_return_tweet.timestamps, "Compose", "getFile_start") -
+         get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_end");
+     latency["compose_send_file:compose_recv_file"] =
+         get_timestamp(_return_tweet.timestamps, "Compose", "getFile_end") -
+         get_timestamp(_return_tweet.timestamps, "Compose", "getFile_start");
+     latency["compose_recv_file:compose_end"] =
+         get_timestamp(_return_tweet.timestamps, "Compose", "compose_end") -
+         get_timestamp(_return_tweet.timestamps, "Compose", "getFile_end");
+     latency["compose_start:compose_end"] =
+         get_timestamp(_return_tweet.timestamps, "Compose", "compose_end") -
+         get_timestamp(_return_tweet.timestamps, "Compose", "compose_start");
+
+     latency["compose_send_tweet:tweet_start"] =
+         get_timestamp(_return_tweet.timestamps, "Tweet", "getTweet_start") -
+         get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start");
+     latency["tweet_start:tweet_send_get"] =
+         get_timestamp(_return_tweet.timestamps, "Tweet", "get_start") -
+         get_timestamp(_return_tweet.timestamps, "Tweet", "getTweet_start");
+     latency["tweet_send_get:tweet_recv_get"] =
+         get_timestamp(_return_tweet.timestamps, "Tweet", "get_end") -
+         get_timestamp(_return_tweet.timestamps, "Tweet", "get_start");
+     latency["tweet_recv_get:tweet_end"] =
+         get_timestamp(_return_tweet.timestamps, "Tweet", "getTweet_end") -
+         get_timestamp(_return_tweet.timestamps, "Tweet", "get_end");
+     latency["tweet_start:tweet_end"] =
+         get_timestamp(_return_tweet.timestamps, "Tweet", "getTweet_end") -
+         get_timestamp(_return_tweet.timestamps, "Tweet", "getTweet_start");
+
+     latency["compose_send_user:user_start"] =
+         get_timestamp(_return_tweet.timestamps, "User", "getUser_start") -
+         get_timestamp(_return_tweet.timestamps, "Compose", "getUser_start");
+     latency["user_start:user_send_get"] =
+         get_timestamp(_return_tweet.timestamps, "User", "get_start") -
+         get_timestamp(_return_tweet.timestamps, "User", "getUser_start");
+     latency["user_send_get:user_recv_get"] =
+         get_timestamp(_return_tweet.timestamps, "User", "get_end") -
+         get_timestamp(_return_tweet.timestamps, "User", "get_start");
+     latency["user_recv_get:user_end"] =
+         get_timestamp(_return_tweet.timestamps, "User", "getUser_end") -
+         get_timestamp(_return_tweet.timestamps, "User", "get_end");
+     latency["user_start:user_end"] =
+         get_timestamp(_return_tweet.timestamps, "User", "getUser_end") -
+         get_timestamp(_return_tweet.timestamps, "User", "getUser_start");
+
+     latency["compose_send_file:file_start"] =
+         get_timestamp(_return_tweet.timestamps, "File", "getFile_start") -
+         get_timestamp(_return_tweet.timestamps, "Compose", "getFile_start");
+     latency["file_start:file_send_get"] =
+         get_timestamp(_return_tweet.timestamps, "File", "get_start") -
+         get_timestamp(_return_tweet.timestamps, "File", "getFile_start");
+     latency["file_send_get:file_recv_get"] =
+         get_timestamp(_return_tweet.timestamps, "File", "get_end") -
+         get_timestamp(_return_tweet.timestamps, "File", "get_start");
+     latency["file_recv_get:file_end"] =
+         get_timestamp(_return_tweet.timestamps, "File", "getFile_end") -
+         get_timestamp(_return_tweet.timestamps, "File", "get_end");
+     latency["file_start:file_end"] =
+         get_timestamp(_return_tweet.timestamps, "File", "getFile_end") -
+         get_timestamp(_return_tweet.timestamps, "File", "getFile_start");
+
+
+
+      reqs_latency.push_back(latency);
       n_reqs_sent++;
       next_send_time = next_send_time + chrono::microseconds(req_inteval_us);
 
@@ -82,12 +180,20 @@ void worker(
   }
 }
 
-void r(list<int> &out) {
-  out.push_back(1);
+double avg(list<map<string, long>> const& v, const string &key) {
+  long sum = 0;
+  for (auto i : v) {
+    sum += i[key];
+  }
+  return 1.0 * sum / v.size();
 }
 
-double avg(list<int64_t> const& v) {
-  return 1.0 * accumulate(v.begin(), v.end(), 0LL) / v.size();
+double sum(vector<map<string, long>> const& v, const string &key) {
+  long sum = 0;
+  for (auto i : v) {
+    sum += i[key];
+  }
+  return 1.0 * sum;
 }
 
 double sum(vector<int> const& v) {
@@ -100,8 +206,8 @@ int main(int argc, char *argv[]) {
   string compose_addr = config_json["ComposeService"]["addr"];
   int compose_port = config_json["ComposeService"]["port"];
 
-  int qps = 100000;
-  int n_threads = 100;
+  int qps = 1000;
+  int n_threads = 10;
   int duration = 10;
 
   int flags, opt;
@@ -133,11 +239,11 @@ int main(int argc, char *argv[]) {
   int tid = 0;
   int32_t interval = 1000000 / qps;
 
-  auto *reqs_latency = new list<int64_t> [n_threads];
+  auto *reqs_latency = new list<map<string, long>> [n_threads];
 
   for (auto &i : t_ptr) {
     i = std::make_shared<thread>(
-        worker,
+        client_worker,
         tid,
         compose_addr,
         compose_port,
@@ -153,12 +259,16 @@ int main(int argc, char *argv[]) {
     i->join();
   }
 
-  list<int64_t> full_latency;
+  list<map<string, long>> full_latency;
   for (int i = 0; i < n_threads; i++)
     full_latency.merge(reqs_latency[i]);
 
-  cout<<avg(full_latency)<<endl;
-  cout<<sum(n_reqs_sent) / duration<<endl;
+
+
+  for (const auto&[key, val] : full_latency.front()) {
+    cout<<key<<"(us): "<<avg(full_latency, key)<<endl;
+  }
+  cout<<"qps: "<<sum(n_reqs_sent) / duration<<endl;
 
 
 }
