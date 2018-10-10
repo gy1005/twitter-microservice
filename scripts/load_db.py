@@ -3,6 +3,7 @@ from optparse import OptionParser
 from multiprocessing import Process
 import random
 import string
+import json
 
 def gen_dict(options, index):
   if options.type == "user":
@@ -41,15 +42,24 @@ def gen_dict(options, index):
     return {}
 
 
-def worker(options, worker_id):
-  mongo = pm.MongoClient(options.addr, options.port)
+def worker(options, worker_id, service_config):
+
   if options.type == "user":
+    addr = service_config["UserMongoDB"]["addr"]
+    port = service_config["UserMongoDB"]["port"]
+    mongo = pm.MongoClient(addr, port)
     db = mongo.user
     collection = db.user
   elif options.type == "tweet":
+    addr = service_config["TweetMongoDB"]["addr"]
+    port = service_config["TweetMongoDB"]["port"]
+    mongo = pm.MongoClient(addr, port)
     db = mongo.tweet
     collection = db.tweet
   elif options.type == "file":
+    addr = service_config["FileMongoDB"]["addr"]
+    port = service_config["FileMongoDB"]["port"]
+    mongo = pm.MongoClient(addr, port)
     db = mongo.file
     collection = db.file
   else:
@@ -68,11 +78,7 @@ def worker(options, worker_id):
 def main():
   parser=OptionParser()
   parser.add_option("-r", "--n_records", type="int", dest="n_records",
-                    default=1000000)
-  parser.add_option("-a", "--addr", type="string", dest="addr",
-                    default="localhost")
-  parser.add_option("-p", "--port", type="int", dest="port",
-                    default=27017)
+                    default=1000)
   parser.add_option("-t", "--n_threads", type="int", dest="n_threads",
                     default=16)
   parser.add_option("-T", "--type", type="string", dest="type")
@@ -82,24 +88,36 @@ def main():
                     default=4096)
   
   (options, args) = parser.parse_args()
+
+  with open("../config/service_config.json") as json_file:
+    service_config = json.load(json_file)
   p_list = []
   for i in range(options.n_threads):
-    p = Process(target=worker, args=(options, i))
+    p = Process(target=worker, args=(options, i, service_config))
     p_list.append(p)
     p.start()
   for i in range(options.n_threads):
     p_list[i].join()
 
-  mongo = pm.MongoClient(options.addr, options.port)
+
   if options.type == "user":
+    addr = service_config["UserMongoDB"]["addr"]
+    port = service_config["UserMongoDB"]["port"]
+    mongo = pm.MongoClient(addr, port)
     db = mongo.user
     collection = db.user
     collection.create_index([("user_id", pm.ASCENDING)])
   elif options.type == "tweet":
+    addr = service_config["TweetMongoDB"]["addr"]
+    port = service_config["TweetMongoDB"]["port"]
+    mongo = pm.MongoClient(addr, port)
     db = mongo.tweet
     collection = db.tweet
     collection.create_index([("tweet_id", pm.ASCENDING)])
   elif options.type == "file":
+    addr = service_config["FileMongoDB"]["addr"]
+    port = service_config["FileMongoDB"]["port"]
+    mongo = pm.MongoClient(addr, port)
     db = mongo.file
     collection = db.file
     collection.create_index([("file_id", pm.ASCENDING)])

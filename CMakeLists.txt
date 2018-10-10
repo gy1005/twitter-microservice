@@ -89,6 +89,7 @@ target_compile_definitions(TweetService PRIVATE
         "${MONGOC_DEFINITIONS}"
         )
 
+
 add_executable(ComposeService
         src/ComposeService.cc
         gen-cpp/ComposeService.cpp
@@ -100,15 +101,16 @@ add_executable(ComposeService
 target_link_libraries(ComposeService PUBLIC
         thrift::thrift_static
         thrift::thriftnb_static
-        )
-target_include_directories(ComposeService PRIVATE
-        "${MONGOC_INCLUDE_DIRS}"
-        )
-target_link_libraries(ComposeService PRIVATE
-        "${MONGOC_LIBRARIES}"
-        "${LIBMEMCACHED_LIBRARY}"
         nlohmann_json::nlohmann_json
         )
-target_compile_definitions(ComposeService PRIVATE
-        "${MONGOC_DEFINITIONS}"
+
+add_executable(Client
+        src/Client.cc
+        gen-cpp/ComposeService.cpp
+        gen-cpp/twitter_types.cpp
+        )
+target_link_libraries(Client PUBLIC
+        thrift::thrift_static
+        thrift::thriftnb_static
+        nlohmann_json::nlohmann_json
         )
