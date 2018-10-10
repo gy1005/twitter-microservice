@@ -34,10 +34,10 @@ def main():
 
   print("conn open")
   tweet_id = "tweet_" + str(random.randint(1, 1000000))
-  res = client.getTweet_(tweet_id)
-  print(res.tweet_id, res.user_id, res.file_id, res.text)
-  res = client.getTweet_(tweet_id)
-  print(res.tweet_id, res.user_id, res.file_id, res.text)
+  res = client.getTweet_(tweet_id, [])
+  print(res.tweet_id, res.user_id, res.file_id, res.text, res.timestamps)
+  res = client.getTweet_(tweet_id, [])
+  print(res.tweet_id, res.user_id, res.file_id, res.text, res.timestamps)
 
   transport.close()
 

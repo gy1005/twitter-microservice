@@ -19,10 +19,11 @@ all_structs = []
 
 
 class Iface(object):
-    def getFile_(self, file_id):
+    def getFile_(self, file_id, timestamps):
         """
         Parameters:
          - file_id
+         - timestamps
         """
         pass
 
@@ -34,18 +35,20 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def getFile_(self, file_id):
+    def getFile_(self, file_id, timestamps):
         """
         Parameters:
          - file_id
+         - timestamps
         """
-        self.send_getFile_(file_id)
+        self.send_getFile_(file_id, timestamps)
         return self.recv_getFile_()
 
-    def send_getFile_(self, file_id):
+    def send_getFile_(self, file_id, timestamps):
         self._oprot.writeMessageBegin('getFile_', TMessageType.CALL, self._seqid)
         args = getFile__args()
         args.file_id = file_id
+        args.timestamps = timestamps
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -93,7 +96,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = getFile__result()
         try:
-            result.success = self._handler.getFile_(args.file_id)
+            result.success = self._handler.getFile_(args.file_id, args.timestamps)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -117,11 +120,13 @@ class getFile__args(object):
     """
     Attributes:
      - file_id
+     - timestamps
     """
 
 
-    def __init__(self, file_id=None,):
+    def __init__(self, file_id=None, timestamps=None,):
         self.file_id = file_id
+        self.timestamps = timestamps
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -137,6 +142,17 @@ class getFile__args(object):
                     self.file_id = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.LIST:
+                    self.timestamps = []
+                    (_etype45, _size42) = iprot.readListBegin()
+                    for _i46 in range(_size42):
+                        _elem47 = Timestamp()
+                        _elem47.read(iprot)
+                        self.timestamps.append(_elem47)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -150,6 +166,13 @@ class getFile__args(object):
         if self.file_id is not None:
             oprot.writeFieldBegin('file_id', TType.STRING, 1)
             oprot.writeString(self.file_id.encode('utf-8') if sys.version_info[0] == 2 else self.file_id)
+            oprot.writeFieldEnd()
+        if self.timestamps is not None:
+            oprot.writeFieldBegin('timestamps', TType.LIST, 2)
+            oprot.writeListBegin(TType.STRUCT, len(self.timestamps))
+            for iter48 in self.timestamps:
+                iter48.write(oprot)
+            oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -171,6 +194,7 @@ all_structs.append(getFile__args)
 getFile__args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'file_id', 'UTF8', None, ),  # 1
+    (2, TType.LIST, 'timestamps', (TType.STRUCT, [Timestamp, None], False), None, ),  # 2
 )
 
 

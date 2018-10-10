@@ -34,10 +34,10 @@ def main():
 
   print("conn open")
   user_id = "user_" + str(random.randint(1, 1000000))
-  res = client.getUser_(user_id)
-  print(res.user_id, res.username, res.homepage)
-  res = client.getUser_(user_id)
-  print(res.user_id, res.username, res.homepage)
+  res = client.getUser_(user_id, [])
+  print(res.user_id, res.username, res.homepage, res.timestamps)
+  res = client.getUser_(user_id, [])
+  print(res.user_id, res.username, res.homepage, res.timestamps)
 
   transport.close()
 

@@ -36,10 +36,11 @@ def main():
   id = random.randint(1, 1000000)
   user_id = "user_" + str(id)
   tweet_id = "tweet_" + str(id)
-  res = client.getTweet(user_id, tweet_id)
+  res = client.getTweet(user_id, tweet_id, [])
   print(res.tweet_id, res.text,
         res.user.user_id, res.user.username, res.user.homepage,
-        res.file.file_id, res.file.content)
+        res.file.file_id, res.file.content,
+        res.timestamps)
 
 
   transport.close()

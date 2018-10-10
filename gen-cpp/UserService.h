@@ -21,7 +21,7 @@ namespace twitter {
 class UserServiceIf {
  public:
   virtual ~UserServiceIf() {}
-  virtual void getUser_(User_& _return, const std::string& user_id) = 0;
+  virtual void getUser_(User_& _return, const std::string& user_id, const std::vector<Timestamp> & timestamps) = 0;
 };
 
 class UserServiceIfFactory {
@@ -51,14 +51,15 @@ class UserServiceIfSingletonFactory : virtual public UserServiceIfFactory {
 class UserServiceNull : virtual public UserServiceIf {
  public:
   virtual ~UserServiceNull() {}
-  void getUser_(User_& /* _return */, const std::string& /* user_id */) {
+  void getUser_(User_& /* _return */, const std::string& /* user_id */, const std::vector<Timestamp> & /* timestamps */) {
     return;
   }
 };
 
 typedef struct _UserService_getUser__args__isset {
-  _UserService_getUser__args__isset() : user_id(false) {}
+  _UserService_getUser__args__isset() : user_id(false), timestamps(false) {}
   bool user_id :1;
+  bool timestamps :1;
 } _UserService_getUser__args__isset;
 
 class UserService_getUser__args {
@@ -71,14 +72,19 @@ class UserService_getUser__args {
 
   virtual ~UserService_getUser__args() throw();
   std::string user_id;
+  std::vector<Timestamp>  timestamps;
 
   _UserService_getUser__args__isset __isset;
 
   void __set_user_id(const std::string& val);
 
+  void __set_timestamps(const std::vector<Timestamp> & val);
+
   bool operator == (const UserService_getUser__args & rhs) const
   {
     if (!(user_id == rhs.user_id))
+      return false;
+    if (!(timestamps == rhs.timestamps))
       return false;
     return true;
   }
@@ -100,6 +106,7 @@ class UserService_getUser__pargs {
 
   virtual ~UserService_getUser__pargs() throw();
   const std::string* user_id;
+  const std::vector<Timestamp> * timestamps;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -185,8 +192,8 @@ class UserServiceClient : virtual public UserServiceIf {
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void getUser_(User_& _return, const std::string& user_id);
-  void send_getUser_(const std::string& user_id);
+  void getUser_(User_& _return, const std::string& user_id, const std::vector<Timestamp> & timestamps);
+  void send_getUser_(const std::string& user_id, const std::vector<Timestamp> & timestamps);
   void recv_getUser_(User_& _return);
  protected:
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
@@ -236,13 +243,13 @@ class UserServiceMultiface : virtual public UserServiceIf {
     ifaces_.push_back(iface);
   }
  public:
-  void getUser_(User_& _return, const std::string& user_id) {
+  void getUser_(User_& _return, const std::string& user_id, const std::vector<Timestamp> & timestamps) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->getUser_(_return, user_id);
+      ifaces_[i]->getUser_(_return, user_id, timestamps);
     }
-    ifaces_[i]->getUser_(_return, user_id);
+    ifaces_[i]->getUser_(_return, user_id, timestamps);
     return;
   }
 
@@ -276,8 +283,8 @@ class UserServiceConcurrentClient : virtual public UserServiceIf {
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void getUser_(User_& _return, const std::string& user_id);
-  int32_t send_getUser_(const std::string& user_id);
+  void getUser_(User_& _return, const std::string& user_id, const std::vector<Timestamp> & timestamps);
+  int32_t send_getUser_(const std::string& user_id, const std::vector<Timestamp> & timestamps);
   void recv_getUser_(User_& _return, const int32_t seqid);
  protected:
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;

@@ -20,7 +20,7 @@ class ComposeServiceHandler : virtual public ComposeServiceIf {
     // Your initialization goes here
   }
 
-  void getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id) {
+  void getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id, const std::vector<Timestamp> & timestamps) {
     // Your implementation goes here
     printf("getTweet\n");
   }

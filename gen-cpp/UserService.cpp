@@ -42,6 +42,26 @@ uint32_t UserService_getUser__args::read(::apache::thrift::protocol::TProtocol* 
           xfer += iprot->skip(ftype);
         }
         break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_LIST) {
+          {
+            this->timestamps.clear();
+            uint32_t _size34;
+            ::apache::thrift::protocol::TType _etype37;
+            xfer += iprot->readListBegin(_etype37, _size34);
+            this->timestamps.resize(_size34);
+            uint32_t _i38;
+            for (_i38 = 0; _i38 < _size34; ++_i38)
+            {
+              xfer += this->timestamps[_i38].read(iprot);
+            }
+            xfer += iprot->readListEnd();
+          }
+          this->__isset.timestamps = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -63,6 +83,18 @@ uint32_t UserService_getUser__args::write(::apache::thrift::protocol::TProtocol*
   xfer += oprot->writeString(this->user_id);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("timestamps", ::apache::thrift::protocol::T_LIST, 2);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->timestamps.size()));
+    std::vector<Timestamp> ::const_iterator _iter39;
+    for (_iter39 = this->timestamps.begin(); _iter39 != this->timestamps.end(); ++_iter39)
+    {
+      xfer += (*_iter39).write(oprot);
+    }
+    xfer += oprot->writeListEnd();
+  }
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -80,6 +112,18 @@ uint32_t UserService_getUser__pargs::write(::apache::thrift::protocol::TProtocol
 
   xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->user_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("timestamps", ::apache::thrift::protocol::T_LIST, 2);
+  {
+    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->timestamps)).size()));
+    std::vector<Timestamp> ::const_iterator _iter40;
+    for (_iter40 = (*(this->timestamps)).begin(); _iter40 != (*(this->timestamps)).end(); ++_iter40)
+    {
+      xfer += (*_iter40).write(oprot);
+    }
+    xfer += oprot->writeListEnd();
+  }
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -195,19 +239,20 @@ uint32_t UserService_getUser__presult::read(::apache::thrift::protocol::TProtoco
   return xfer;
 }
 
-void UserServiceClient::getUser_(User_& _return, const std::string& user_id)
+void UserServiceClient::getUser_(User_& _return, const std::string& user_id, const std::vector<Timestamp> & timestamps)
 {
-  send_getUser_(user_id);
+  send_getUser_(user_id, timestamps);
   recv_getUser_(_return);
 }
 
-void UserServiceClient::send_getUser_(const std::string& user_id)
+void UserServiceClient::send_getUser_(const std::string& user_id, const std::vector<Timestamp> & timestamps)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("getUser_", ::apache::thrift::protocol::T_CALL, cseqid);
 
   UserService_getUser__pargs args;
   args.user_id = &user_id;
+  args.timestamps = &timestamps;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -295,7 +340,7 @@ void UserServiceProcessor::process_getUser_(int32_t seqid, ::apache::thrift::pro
 
   UserService_getUser__result result;
   try {
-    iface_->getUser_(result.success, args.user_id);
+    iface_->getUser_(result.success, args.user_id, args.timestamps);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
@@ -333,13 +378,13 @@ void UserServiceProcessor::process_getUser_(int32_t seqid, ::apache::thrift::pro
   return processor;
 }
 
-void UserServiceConcurrentClient::getUser_(User_& _return, const std::string& user_id)
+void UserServiceConcurrentClient::getUser_(User_& _return, const std::string& user_id, const std::vector<Timestamp> & timestamps)
 {
-  int32_t seqid = send_getUser_(user_id);
+  int32_t seqid = send_getUser_(user_id, timestamps);
   recv_getUser_(_return, seqid);
 }
 
-int32_t UserServiceConcurrentClient::send_getUser_(const std::string& user_id)
+int32_t UserServiceConcurrentClient::send_getUser_(const std::string& user_id, const std::vector<Timestamp> & timestamps)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
@@ -347,6 +392,7 @@ int32_t UserServiceConcurrentClient::send_getUser_(const std::string& user_id)
 
   UserService_getUser__pargs args;
   args.user_id = &user_id;
+  args.timestamps = &timestamps;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

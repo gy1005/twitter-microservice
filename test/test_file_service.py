@@ -34,10 +34,10 @@ def main():
 
   print("conn open")
   file_id = "file_" + str(random.randint(1, 1000000))
-  res = client.getFile_(file_id)
-  print(res.file_id, res.content)
-  res = client.getFile_(file_id)
-  print(res.file_id, res.content)
+  res = client.getFile_(file_id, [])
+  print(res.file_id, res.content, res.timestamps)
+  res = client.getFile_(file_id, [])
+  print(res.file_id, res.content, res.timestamps)
 
   transport.close()
 
