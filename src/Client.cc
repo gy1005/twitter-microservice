@@ -79,90 +79,91 @@ void client_worker(
       vector<Timestamp> timestamps;
       map<string, long> latency;
 
-//      append_timestamp("Client", "start", timestamps, nullptr);
       auto start_time = duration_cast<microseconds>(
           system_clock::now().time_since_epoch()).count();
       client.getTweet(_return_tweet, user_id, tweet_id, timestamps);
       auto end_time = duration_cast<microseconds>(
           system_clock::now().time_since_epoch()).count();
 
-//      append_timestamp("Client", "end", _return_tweet.timestamps, nullptr);
-
       latency["total"] = end_time - start_time;
 
-     latency["client_send:compose_start"] =
+      latency["client_send:compose_start"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "compose_start") -
          start_time;
-     latency["compose_start:compose_send_tweet"] =
+      latency["compose_start:compose_send_tweet"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start") -
          get_timestamp(_return_tweet.timestamps, "Compose", "compose_start");
-     latency["compose_send_tweet:compose_send_user"] =
+      latency["compose_send_tweet:compose_send_user"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "getUser_start") -
          get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start");
-     latency["compose_send_tweet:compose_recv_tweet"] =
+      latency["compose_send_tweet:compose_recv_tweet"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_end") -
          get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start");
-     latency["compose_send_user:compose_recv_user"] =
+      latency["compose_start:compose_send_tweet/user"] =
+          max(get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start"),
+              get_timestamp(_return_tweet.timestamps, "Compose", "getUser_start")) -
+          get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start");
+      latency["compose_send_user:compose_recv_user"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "getUser_end") -
          get_timestamp(_return_tweet.timestamps, "Compose", "getUser_start");
-     latency["compose_recv_tweet:compose_send_file"] =
+      latency["compose_recv_tweet:compose_send_file"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "getFile_start") -
          get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_end");
-     latency["compose_send_file:compose_recv_file"] =
+      latency["compose_send_file:compose_recv_file"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "getFile_end") -
          get_timestamp(_return_tweet.timestamps, "Compose", "getFile_start");
-     latency["compose_recv_file:compose_end"] =
+      latency["compose_recv_file:compose_end"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "compose_end") -
          get_timestamp(_return_tweet.timestamps, "Compose", "getFile_end");
-     latency["compose_start:compose_end"] =
+      latency["compose_start:compose_end"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "compose_end") -
          get_timestamp(_return_tweet.timestamps, "Compose", "compose_start");
 
-     latency["compose_send_tweet:tweet_start"] =
+      latency["compose_send_tweet:tweet_start"] =
          get_timestamp(_return_tweet.timestamps, "Tweet", "getTweet_start") -
          get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start");
-     latency["tweet_start:tweet_send_get"] =
+      latency["tweet_start:tweet_send_get"] =
          get_timestamp(_return_tweet.timestamps, "Tweet", "get_start") -
          get_timestamp(_return_tweet.timestamps, "Tweet", "getTweet_start");
-     latency["tweet_send_get:tweet_recv_get"] =
+      latency["tweet_send_get:tweet_recv_get"] =
          get_timestamp(_return_tweet.timestamps, "Tweet", "get_end") -
          get_timestamp(_return_tweet.timestamps, "Tweet", "get_start");
-     latency["tweet_recv_get:tweet_end"] =
+      latency["tweet_recv_get:tweet_end"] =
          get_timestamp(_return_tweet.timestamps, "Tweet", "getTweet_end") -
          get_timestamp(_return_tweet.timestamps, "Tweet", "get_end");
-     latency["tweet_start:tweet_end"] =
+      latency["tweet_start:tweet_end"] =
          get_timestamp(_return_tweet.timestamps, "Tweet", "getTweet_end") -
          get_timestamp(_return_tweet.timestamps, "Tweet", "getTweet_start");
 
-     latency["compose_send_user:user_start"] =
+      latency["compose_send_user:user_start"] =
          get_timestamp(_return_tweet.timestamps, "User", "getUser_start") -
          get_timestamp(_return_tweet.timestamps, "Compose", "getUser_start");
-     latency["user_start:user_send_get"] =
+      latency["user_start:user_send_get"] =
          get_timestamp(_return_tweet.timestamps, "User", "get_start") -
          get_timestamp(_return_tweet.timestamps, "User", "getUser_start");
-     latency["user_send_get:user_recv_get"] =
+      latency["user_send_get:user_recv_get"] =
          get_timestamp(_return_tweet.timestamps, "User", "get_end") -
          get_timestamp(_return_tweet.timestamps, "User", "get_start");
-     latency["user_recv_get:user_end"] =
+      latency["user_recv_get:user_end"] =
          get_timestamp(_return_tweet.timestamps, "User", "getUser_end") -
          get_timestamp(_return_tweet.timestamps, "User", "get_end");
-     latency["user_start:user_end"] =
+      latency["user_start:user_end"] =
          get_timestamp(_return_tweet.timestamps, "User", "getUser_end") -
          get_timestamp(_return_tweet.timestamps, "User", "getUser_start");
 
-     latency["compose_send_file:file_start"] =
+      latency["compose_send_file:file_start"] =
          get_timestamp(_return_tweet.timestamps, "File", "getFile_start") -
          get_timestamp(_return_tweet.timestamps, "Compose", "getFile_start");
-     latency["file_start:file_send_get"] =
+      latency["file_start:file_send_get"] =
          get_timestamp(_return_tweet.timestamps, "File", "get_start") -
          get_timestamp(_return_tweet.timestamps, "File", "getFile_start");
-     latency["file_send_get:file_recv_get"] =
+      latency["file_send_get:file_recv_get"] =
          get_timestamp(_return_tweet.timestamps, "File", "get_end") -
          get_timestamp(_return_tweet.timestamps, "File", "get_start");
-     latency["file_recv_get:file_end"] =
+      latency["file_recv_get:file_end"] =
          get_timestamp(_return_tweet.timestamps, "File", "getFile_end") -
          get_timestamp(_return_tweet.timestamps, "File", "get_end");
-     latency["file_start:file_end"] =
+      latency["file_start:file_end"] =
          get_timestamp(_return_tweet.timestamps, "File", "getFile_end") -
          get_timestamp(_return_tweet.timestamps, "File", "getFile_start");
 
