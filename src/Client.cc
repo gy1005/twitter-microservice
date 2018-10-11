@@ -233,7 +233,7 @@ int main(int argc, char *argv[]) {
 
   std::shared_ptr<thread> t_ptr[n_threads];
   vector<int> n_reqs_sent;
-  for (int i = 0; i< n_threads; i++) {
+  for (int i = 0; i < n_threads; i++) {
     n_reqs_sent.push_back(0);
   }
   int tid = 0;

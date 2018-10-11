@@ -11,6 +11,7 @@ HunterGate(
 
 project(twitter_microservice)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_COMPILER /usr/bin/g++-8)
 
 hunter_add_package(thrift)
 find_package(thrift CONFIG REQUIRED)

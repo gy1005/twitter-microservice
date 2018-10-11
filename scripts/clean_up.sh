@@ -13,3 +13,8 @@ docker stop tweet_memcached
 docker rm tweet_memcached
 docker stop file_memcached
 docker rm file_memcached
+
+killall UserService
+killall FileService
+killall TweetService
+killall ComposeService
