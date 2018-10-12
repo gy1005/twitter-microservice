@@ -61,7 +61,6 @@ void TweetServiceHandler::getTweet_(Tweet_ &_return, const string &tweet_id,
                                     memcached_config_str.length());
   memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_NO_BLOCK, 1);
   memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_TCP_NODELAY, 1);
-  memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_TCP_KEEPALIVE, 1);
   memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_BINARY_PROTOCOL,
                          1);
 
@@ -95,7 +94,6 @@ void TweetServiceHandler::getTweet_(Tweet_ &_return, const string &tweet_id,
     assert(_return.tweet_id == tweet_id);
   } else {
     // If the user is not in the memcached, find it in mongodb.
-
     auto collection = mongoc_client_get_collection(mongodb_client,
                                                    "tweet", "tweet");
     assert(collection);
@@ -133,7 +131,7 @@ void TweetServiceHandler::getTweet_(Tweet_ &_return, const string &tweet_id,
       append_timestamp("Tweet", "set_end", timestamps_return_, nullptr);
       
       if (memcached_rc != MEMCACHED_SUCCESS)
-        cerr << "getUser " << memcached_strerror(memcached_client, memcached_rc)
+        cerr << "getTweet " << tweet_id << " " << memcached_strerror(memcached_client, memcached_rc)
              << endl;
     }
     mongoc_collection_destroy(collection);

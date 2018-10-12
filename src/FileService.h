@@ -59,9 +59,8 @@ void FileServiceHandler::getFile_(File_ &_return, const string &file_id,
                                     memcached_config_str.length());
   memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_NO_BLOCK, 1);
   memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_TCP_NODELAY, 1);
-  memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_TCP_KEEPALIVE, 1);
   memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_BINARY_PROTOCOL,
-                         1);
+                         1);                        
 
   string mongodb_config_str = "mongodb://" + mongodb_addr_ + ":"
                               + to_string(mongodb_port_);
@@ -91,7 +90,6 @@ void FileServiceHandler::getFile_(File_ &_return, const string &file_id,
     assert(_return.file_id == file_id);
   } else {
     // If the user is not in the memcached, find it in mongodb.
-
     auto collection = mongoc_client_get_collection(mongodb_client,
                                                    "file", "file");
     assert(collection);
@@ -127,7 +125,7 @@ void FileServiceHandler::getFile_(File_ &_return, const string &file_id,
       append_timestamp("File", "set_end", timestamps_return_, nullptr);
       
       if (memcached_rc != MEMCACHED_SUCCESS)
-        cerr << "getUser " << memcached_strerror(memcached_client, memcached_rc)
+        cerr << "getFile " << memcached_strerror(memcached_client, memcached_rc)
              << endl;
     }
     mongoc_collection_destroy(collection);
