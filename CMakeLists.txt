@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
 
-# Using hunter to resolve dependencies.pigpass
-
 include("cmake/HunterGate.cmake")
 HunterGate(
         URL "https://github.com/ruslo/hunter/archive/v0.23.28.tar.gz"
