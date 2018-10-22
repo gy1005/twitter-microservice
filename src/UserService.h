@@ -76,7 +76,6 @@ void UserServiceHandler::getUser_(User_ &_return, const string &user_id,
   memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_NO_BLOCK, 1);
   memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_TCP_NODELAY, 1);
 //  memcached_behavior_set(mmc, MEMCACHED_BEHAVIOR_NOREPLY, 1);
-  memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_TCP_KEEPALIVE, 1);
   memcached_behavior_set(memcached_client, MEMCACHED_BEHAVIOR_BINARY_PROTOCOL,
                          1);
 
@@ -146,7 +145,7 @@ void UserServiceHandler::getUser_(User_ &_return, const string &user_id,
       append_timestamp("User", "set_end", timestamps_return_, nullptr);
 
       if (memcached_rc != MEMCACHED_SUCCESS)
-        cerr << "getUser " << memcached_strerror(memcached_client, memcached_rc)
+        cerr << "getUser " <<user_id<<" "<< memcached_strerror(memcached_client, memcached_rc)
              << endl;
     }
     mongoc_collection_destroy(collection);

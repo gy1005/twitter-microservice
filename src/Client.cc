@@ -93,16 +93,16 @@ void client_worker(
       latency["compose_start:compose_send_tweet"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start") -
          get_timestamp(_return_tweet.timestamps, "Compose", "compose_start");
-      latency["compose_send_tweet:compose_send_user"] =
+      latency["compose_start:compose_send_user"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "getUser_start") -
-         get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start");
+         get_timestamp(_return_tweet.timestamps, "Compose", "compose_start");
       latency["compose_send_tweet:compose_recv_tweet"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_end") -
          get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start");
       latency["compose_start:compose_send_tweet/user"] =
           max(get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start"),
               get_timestamp(_return_tweet.timestamps, "Compose", "getUser_start")) -
-          get_timestamp(_return_tweet.timestamps, "Compose", "getTweet_start");
+          get_timestamp(_return_tweet.timestamps, "Compose", "compose_start");
       latency["compose_send_user:compose_recv_user"] =
          get_timestamp(_return_tweet.timestamps, "Compose", "getUser_end") -
          get_timestamp(_return_tweet.timestamps, "Compose", "getUser_start");
@@ -267,7 +267,7 @@ int main(int argc, char *argv[]) {
 
 
   for (const auto&[key, val] : full_latency.front()) {
-    cout<<key<<"(us): "<<avg(full_latency, key)<<endl;
+    cout<<key<<"(us)"<<"\t"<<avg(full_latency, key)<<endl;
   }
   cout<<"qps: "<<sum(n_reqs_sent) / duration<<endl;
 
