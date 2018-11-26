@@ -19,11 +19,10 @@ all_structs = []
 
 
 class Iface(object):
-    def getUser_(self, user_id, timestamps):
+    def getUser_(self, user_id):
         """
         Parameters:
          - user_id
-         - timestamps
         """
         pass
 
@@ -35,20 +34,18 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def getUser_(self, user_id, timestamps):
+    def getUser_(self, user_id):
         """
         Parameters:
          - user_id
-         - timestamps
         """
-        self.send_getUser_(user_id, timestamps)
+        self.send_getUser_(user_id)
         return self.recv_getUser_()
 
-    def send_getUser_(self, user_id, timestamps):
+    def send_getUser_(self, user_id):
         self._oprot.writeMessageBegin('getUser_', TMessageType.CALL, self._seqid)
         args = getUser__args()
         args.user_id = user_id
-        args.timestamps = timestamps
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -96,7 +93,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = getUser__result()
         try:
-            result.success = self._handler.getUser_(args.user_id, args.timestamps)
+            result.success = self._handler.getUser_(args.user_id)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -120,13 +117,11 @@ class getUser__args(object):
     """
     Attributes:
      - user_id
-     - timestamps
     """
 
 
-    def __init__(self, user_id=None, timestamps=None,):
+    def __init__(self, user_id=None,):
         self.user_id = user_id
-        self.timestamps = timestamps
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -142,17 +137,6 @@ class getUser__args(object):
                     self.user_id = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
-            elif fid == 2:
-                if ftype == TType.LIST:
-                    self.timestamps = []
-                    (_etype31, _size28) = iprot.readListBegin()
-                    for _i32 in range(_size28):
-                        _elem33 = Timestamp()
-                        _elem33.read(iprot)
-                        self.timestamps.append(_elem33)
-                    iprot.readListEnd()
-                else:
-                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -166,13 +150,6 @@ class getUser__args(object):
         if self.user_id is not None:
             oprot.writeFieldBegin('user_id', TType.STRING, 1)
             oprot.writeString(self.user_id.encode('utf-8') if sys.version_info[0] == 2 else self.user_id)
-            oprot.writeFieldEnd()
-        if self.timestamps is not None:
-            oprot.writeFieldBegin('timestamps', TType.LIST, 2)
-            oprot.writeListBegin(TType.STRUCT, len(self.timestamps))
-            for iter34 in self.timestamps:
-                iter34.write(oprot)
-            oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -194,7 +171,6 @@ all_structs.append(getUser__args)
 getUser__args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'user_id', 'UTF8', None, ),  # 1
-    (2, TType.LIST, 'timestamps', (TType.STRUCT, [Timestamp, None], False), None, ),  # 2
 )
 
 

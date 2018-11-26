@@ -20,10 +20,10 @@ def main():
   addr = config["ComposeService"]["addr"]
   port = config["ComposeService"]["port"]
   # Make socket
-  transport = TSocket.TSocket(addr, port)
+  socket = TSocket.TSocket(addr, port)
 
   # Buffering is critical. Raw sockets are very slow
-  transport = TTransport.TBufferedTransport(transport)
+  transport = TTransport.TBufferedTransport(socket)
 
   # Wrap in a protocol
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
@@ -38,21 +38,21 @@ def main():
   id = random.randint(0, 1000)
   user_id = "user_" + str(id)
   tweet_id = "tweet_" + str(id)
-  res = client.getTweet(user_id, tweet_id, [])
+  res = client.getTweet(user_id, tweet_id)
   # print(res.tweet_id, res.text,
   #       res.user.user_id, res.user.username, res.user.homepage,
   #       res.file.file_id, res.file.content,
   #       res.timestamps)
 
-  base_time = res.timestamps[0].timestamp
-  for i in range(len(res.timestamps)):
-    res.timestamps[i].timestamp = res.timestamps[i].timestamp - \
-                                  base_time
+  # base_time = res.timestamps[0].timestamp
+  # for i in range(len(res.timestamps)):
+  #   res.timestamps[i].timestamp = res.timestamps[i].timestamp - \
+  #                                 base_time
+  
+  # for timestamp in res.timestamps:
+  #   print(timestamp)
 
-  for timestamp in res.timestamps:
-    print(timestamp)
-
-
+  print(res.text)
   transport.close()
 
 if __name__ == '__main__':

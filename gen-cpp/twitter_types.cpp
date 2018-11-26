@@ -14,138 +14,6 @@
 namespace twitter {
 
 
-Timestamp::~Timestamp() throw() {
-}
-
-
-void Timestamp::__set_service_name(const std::string& val) {
-  this->service_name = val;
-}
-
-void Timestamp::__set_function_name(const std::string& val) {
-  this->function_name = val;
-}
-
-void Timestamp::__set_timestamp(const int64_t val) {
-  this->timestamp = val;
-}
-std::ostream& operator<<(std::ostream& out, const Timestamp& obj)
-{
-  obj.printTo(out);
-  return out;
-}
-
-
-uint32_t Timestamp::read(::apache::thrift::protocol::TProtocol* iprot) {
-
-  ::apache::thrift::protocol::TInputRecursionTracker tracker(*iprot);
-  uint32_t xfer = 0;
-  std::string fname;
-  ::apache::thrift::protocol::TType ftype;
-  int16_t fid;
-
-  xfer += iprot->readStructBegin(fname);
-
-  using ::apache::thrift::protocol::TProtocolException;
-
-
-  while (true)
-  {
-    xfer += iprot->readFieldBegin(fname, ftype, fid);
-    if (ftype == ::apache::thrift::protocol::T_STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 1:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->service_name);
-          this->__isset.service_name = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 2:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->function_name);
-          this->__isset.function_name = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      case 3:
-        if (ftype == ::apache::thrift::protocol::T_I64) {
-          xfer += iprot->readI64(this->timestamp);
-          this->__isset.timestamp = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
-      default:
-        xfer += iprot->skip(ftype);
-        break;
-    }
-    xfer += iprot->readFieldEnd();
-  }
-
-  xfer += iprot->readStructEnd();
-
-  return xfer;
-}
-
-uint32_t Timestamp::write(::apache::thrift::protocol::TProtocol* oprot) const {
-  uint32_t xfer = 0;
-  ::apache::thrift::protocol::TOutputRecursionTracker tracker(*oprot);
-  xfer += oprot->writeStructBegin("Timestamp");
-
-  xfer += oprot->writeFieldBegin("service_name", ::apache::thrift::protocol::T_STRING, 1);
-  xfer += oprot->writeString(this->service_name);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("function_name", ::apache::thrift::protocol::T_STRING, 2);
-  xfer += oprot->writeString(this->function_name);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("timestamp", ::apache::thrift::protocol::T_I64, 3);
-  xfer += oprot->writeI64(this->timestamp);
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldStop();
-  xfer += oprot->writeStructEnd();
-  return xfer;
-}
-
-void swap(Timestamp &a, Timestamp &b) {
-  using ::std::swap;
-  swap(a.service_name, b.service_name);
-  swap(a.function_name, b.function_name);
-  swap(a.timestamp, b.timestamp);
-  swap(a.__isset, b.__isset);
-}
-
-Timestamp::Timestamp(const Timestamp& other0) {
-  service_name = other0.service_name;
-  function_name = other0.function_name;
-  timestamp = other0.timestamp;
-  __isset = other0.__isset;
-}
-Timestamp& Timestamp::operator=(const Timestamp& other1) {
-  service_name = other1.service_name;
-  function_name = other1.function_name;
-  timestamp = other1.timestamp;
-  __isset = other1.__isset;
-  return *this;
-}
-void Timestamp::printTo(std::ostream& out) const {
-  using ::apache::thrift::to_string;
-  out << "Timestamp(";
-  out << "service_name=" << to_string(service_name);
-  out << ", " << "function_name=" << to_string(function_name);
-  out << ", " << "timestamp=" << to_string(timestamp);
-  out << ")";
-}
-
-
 Tweet_::~Tweet_() throw() {
 }
 
@@ -164,10 +32,6 @@ void Tweet_::__set_file_id(const std::string& val) {
 
 void Tweet_::__set_text(const std::string& val) {
   this->text = val;
-}
-
-void Tweet_::__set_timestamps(const std::vector<Timestamp> & val) {
-  this->timestamps = val;
 }
 std::ostream& operator<<(std::ostream& out, const Tweet_& obj)
 {
@@ -229,26 +93,6 @@ uint32_t Tweet_::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 5:
-        if (ftype == ::apache::thrift::protocol::T_LIST) {
-          {
-            this->timestamps.clear();
-            uint32_t _size2;
-            ::apache::thrift::protocol::TType _etype5;
-            xfer += iprot->readListBegin(_etype5, _size2);
-            this->timestamps.resize(_size2);
-            uint32_t _i6;
-            for (_i6 = 0; _i6 < _size2; ++_i6)
-            {
-              xfer += this->timestamps[_i6].read(iprot);
-            }
-            xfer += iprot->readListEnd();
-          }
-          this->__isset.timestamps = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -282,18 +126,6 @@ uint32_t Tweet_::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->text);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("timestamps", ::apache::thrift::protocol::T_LIST, 5);
-  {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->timestamps.size()));
-    std::vector<Timestamp> ::const_iterator _iter7;
-    for (_iter7 = this->timestamps.begin(); _iter7 != this->timestamps.end(); ++_iter7)
-    {
-      xfer += (*_iter7).write(oprot);
-    }
-    xfer += oprot->writeListEnd();
-  }
-  xfer += oprot->writeFieldEnd();
-
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -305,25 +137,22 @@ void swap(Tweet_ &a, Tweet_ &b) {
   swap(a.user_id, b.user_id);
   swap(a.file_id, b.file_id);
   swap(a.text, b.text);
-  swap(a.timestamps, b.timestamps);
   swap(a.__isset, b.__isset);
 }
 
-Tweet_::Tweet_(const Tweet_& other8) {
-  tweet_id = other8.tweet_id;
-  user_id = other8.user_id;
-  file_id = other8.file_id;
-  text = other8.text;
-  timestamps = other8.timestamps;
-  __isset = other8.__isset;
+Tweet_::Tweet_(const Tweet_& other0) {
+  tweet_id = other0.tweet_id;
+  user_id = other0.user_id;
+  file_id = other0.file_id;
+  text = other0.text;
+  __isset = other0.__isset;
 }
-Tweet_& Tweet_::operator=(const Tweet_& other9) {
-  tweet_id = other9.tweet_id;
-  user_id = other9.user_id;
-  file_id = other9.file_id;
-  text = other9.text;
-  timestamps = other9.timestamps;
-  __isset = other9.__isset;
+Tweet_& Tweet_::operator=(const Tweet_& other1) {
+  tweet_id = other1.tweet_id;
+  user_id = other1.user_id;
+  file_id = other1.file_id;
+  text = other1.text;
+  __isset = other1.__isset;
   return *this;
 }
 void Tweet_::printTo(std::ostream& out) const {
@@ -333,7 +162,6 @@ void Tweet_::printTo(std::ostream& out) const {
   out << ", " << "user_id=" << to_string(user_id);
   out << ", " << "file_id=" << to_string(file_id);
   out << ", " << "text=" << to_string(text);
-  out << ", " << "timestamps=" << to_string(timestamps);
   out << ")";
 }
 
@@ -352,10 +180,6 @@ void User_::__set_username(const std::string& val) {
 
 void User_::__set_homepage(const std::string& val) {
   this->homepage = val;
-}
-
-void User_::__set_timestamps(const std::vector<Timestamp> & val) {
-  this->timestamps = val;
 }
 std::ostream& operator<<(std::ostream& out, const User_& obj)
 {
@@ -409,26 +233,6 @@ uint32_t User_::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 4:
-        if (ftype == ::apache::thrift::protocol::T_LIST) {
-          {
-            this->timestamps.clear();
-            uint32_t _size10;
-            ::apache::thrift::protocol::TType _etype13;
-            xfer += iprot->readListBegin(_etype13, _size10);
-            this->timestamps.resize(_size10);
-            uint32_t _i14;
-            for (_i14 = 0; _i14 < _size10; ++_i14)
-            {
-              xfer += this->timestamps[_i14].read(iprot);
-            }
-            xfer += iprot->readListEnd();
-          }
-          this->__isset.timestamps = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -458,18 +262,6 @@ uint32_t User_::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->homepage);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("timestamps", ::apache::thrift::protocol::T_LIST, 4);
-  {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->timestamps.size()));
-    std::vector<Timestamp> ::const_iterator _iter15;
-    for (_iter15 = this->timestamps.begin(); _iter15 != this->timestamps.end(); ++_iter15)
-    {
-      xfer += (*_iter15).write(oprot);
-    }
-    xfer += oprot->writeListEnd();
-  }
-  xfer += oprot->writeFieldEnd();
-
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -480,23 +272,20 @@ void swap(User_ &a, User_ &b) {
   swap(a.user_id, b.user_id);
   swap(a.username, b.username);
   swap(a.homepage, b.homepage);
-  swap(a.timestamps, b.timestamps);
   swap(a.__isset, b.__isset);
 }
 
-User_::User_(const User_& other16) {
-  user_id = other16.user_id;
-  username = other16.username;
-  homepage = other16.homepage;
-  timestamps = other16.timestamps;
-  __isset = other16.__isset;
+User_::User_(const User_& other2) {
+  user_id = other2.user_id;
+  username = other2.username;
+  homepage = other2.homepage;
+  __isset = other2.__isset;
 }
-User_& User_::operator=(const User_& other17) {
-  user_id = other17.user_id;
-  username = other17.username;
-  homepage = other17.homepage;
-  timestamps = other17.timestamps;
-  __isset = other17.__isset;
+User_& User_::operator=(const User_& other3) {
+  user_id = other3.user_id;
+  username = other3.username;
+  homepage = other3.homepage;
+  __isset = other3.__isset;
   return *this;
 }
 void User_::printTo(std::ostream& out) const {
@@ -505,7 +294,6 @@ void User_::printTo(std::ostream& out) const {
   out << "user_id=" << to_string(user_id);
   out << ", " << "username=" << to_string(username);
   out << ", " << "homepage=" << to_string(homepage);
-  out << ", " << "timestamps=" << to_string(timestamps);
   out << ")";
 }
 
@@ -520,10 +308,6 @@ void File_::__set_file_id(const std::string& val) {
 
 void File_::__set_content(const std::string& val) {
   this->content = val;
-}
-
-void File_::__set_timestamps(const std::vector<Timestamp> & val) {
-  this->timestamps = val;
 }
 std::ostream& operator<<(std::ostream& out, const File_& obj)
 {
@@ -569,26 +353,6 @@ uint32_t File_::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 3:
-        if (ftype == ::apache::thrift::protocol::T_LIST) {
-          {
-            this->timestamps.clear();
-            uint32_t _size18;
-            ::apache::thrift::protocol::TType _etype21;
-            xfer += iprot->readListBegin(_etype21, _size18);
-            this->timestamps.resize(_size18);
-            uint32_t _i22;
-            for (_i22 = 0; _i22 < _size18; ++_i22)
-            {
-              xfer += this->timestamps[_i22].read(iprot);
-            }
-            xfer += iprot->readListEnd();
-          }
-          this->__isset.timestamps = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -614,18 +378,6 @@ uint32_t File_::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->content);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("timestamps", ::apache::thrift::protocol::T_LIST, 3);
-  {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->timestamps.size()));
-    std::vector<Timestamp> ::const_iterator _iter23;
-    for (_iter23 = this->timestamps.begin(); _iter23 != this->timestamps.end(); ++_iter23)
-    {
-      xfer += (*_iter23).write(oprot);
-    }
-    xfer += oprot->writeListEnd();
-  }
-  xfer += oprot->writeFieldEnd();
-
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -635,21 +387,18 @@ void swap(File_ &a, File_ &b) {
   using ::std::swap;
   swap(a.file_id, b.file_id);
   swap(a.content, b.content);
-  swap(a.timestamps, b.timestamps);
   swap(a.__isset, b.__isset);
 }
 
-File_::File_(const File_& other24) {
-  file_id = other24.file_id;
-  content = other24.content;
-  timestamps = other24.timestamps;
-  __isset = other24.__isset;
+File_::File_(const File_& other4) {
+  file_id = other4.file_id;
+  content = other4.content;
+  __isset = other4.__isset;
 }
-File_& File_::operator=(const File_& other25) {
-  file_id = other25.file_id;
-  content = other25.content;
-  timestamps = other25.timestamps;
-  __isset = other25.__isset;
+File_& File_::operator=(const File_& other5) {
+  file_id = other5.file_id;
+  content = other5.content;
+  __isset = other5.__isset;
   return *this;
 }
 void File_::printTo(std::ostream& out) const {
@@ -657,7 +406,6 @@ void File_::printTo(std::ostream& out) const {
   out << "File_(";
   out << "file_id=" << to_string(file_id);
   out << ", " << "content=" << to_string(content);
-  out << ", " << "timestamps=" << to_string(timestamps);
   out << ")";
 }
 
@@ -680,10 +428,6 @@ void Tweet::__set_text(const std::string& val) {
 
 void Tweet::__set_file(const File_& val) {
   this->file = val;
-}
-
-void Tweet::__set_timestamps(const std::vector<Timestamp> & val) {
-  this->timestamps = val;
 }
 std::ostream& operator<<(std::ostream& out, const Tweet& obj)
 {
@@ -745,26 +489,6 @@ uint32_t Tweet::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
-      case 5:
-        if (ftype == ::apache::thrift::protocol::T_LIST) {
-          {
-            this->timestamps.clear();
-            uint32_t _size26;
-            ::apache::thrift::protocol::TType _etype29;
-            xfer += iprot->readListBegin(_etype29, _size26);
-            this->timestamps.resize(_size26);
-            uint32_t _i30;
-            for (_i30 = 0; _i30 < _size26; ++_i30)
-            {
-              xfer += this->timestamps[_i30].read(iprot);
-            }
-            xfer += iprot->readListEnd();
-          }
-          this->__isset.timestamps = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -798,18 +522,6 @@ uint32_t Tweet::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += this->file.write(oprot);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("timestamps", ::apache::thrift::protocol::T_LIST, 5);
-  {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->timestamps.size()));
-    std::vector<Timestamp> ::const_iterator _iter31;
-    for (_iter31 = this->timestamps.begin(); _iter31 != this->timestamps.end(); ++_iter31)
-    {
-      xfer += (*_iter31).write(oprot);
-    }
-    xfer += oprot->writeListEnd();
-  }
-  xfer += oprot->writeFieldEnd();
-
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -821,25 +533,22 @@ void swap(Tweet &a, Tweet &b) {
   swap(a.user, b.user);
   swap(a.text, b.text);
   swap(a.file, b.file);
-  swap(a.timestamps, b.timestamps);
   swap(a.__isset, b.__isset);
 }
 
-Tweet::Tweet(const Tweet& other32) {
-  tweet_id = other32.tweet_id;
-  user = other32.user;
-  text = other32.text;
-  file = other32.file;
-  timestamps = other32.timestamps;
-  __isset = other32.__isset;
+Tweet::Tweet(const Tweet& other6) {
+  tweet_id = other6.tweet_id;
+  user = other6.user;
+  text = other6.text;
+  file = other6.file;
+  __isset = other6.__isset;
 }
-Tweet& Tweet::operator=(const Tweet& other33) {
-  tweet_id = other33.tweet_id;
-  user = other33.user;
-  text = other33.text;
-  file = other33.file;
-  timestamps = other33.timestamps;
-  __isset = other33.__isset;
+Tweet& Tweet::operator=(const Tweet& other7) {
+  tweet_id = other7.tweet_id;
+  user = other7.user;
+  text = other7.text;
+  file = other7.file;
+  __isset = other7.__isset;
   return *this;
 }
 void Tweet::printTo(std::ostream& out) const {
@@ -849,7 +558,6 @@ void Tweet::printTo(std::ostream& out) const {
   out << ", " << "user=" << to_string(user);
   out << ", " << "text=" << to_string(text);
   out << ", " << "file=" << to_string(file);
-  out << ", " << "timestamps=" << to_string(timestamps);
   out << ")";
 }
 

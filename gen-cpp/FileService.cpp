@@ -42,26 +42,6 @@ uint32_t FileService_getFile__args::read(::apache::thrift::protocol::TProtocol* 
           xfer += iprot->skip(ftype);
         }
         break;
-      case 2:
-        if (ftype == ::apache::thrift::protocol::T_LIST) {
-          {
-            this->timestamps.clear();
-            uint32_t _size48;
-            ::apache::thrift::protocol::TType _etype51;
-            xfer += iprot->readListBegin(_etype51, _size48);
-            this->timestamps.resize(_size48);
-            uint32_t _i52;
-            for (_i52 = 0; _i52 < _size48; ++_i52)
-            {
-              xfer += this->timestamps[_i52].read(iprot);
-            }
-            xfer += iprot->readListEnd();
-          }
-          this->__isset.timestamps = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -83,18 +63,6 @@ uint32_t FileService_getFile__args::write(::apache::thrift::protocol::TProtocol*
   xfer += oprot->writeString(this->file_id);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("timestamps", ::apache::thrift::protocol::T_LIST, 2);
-  {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->timestamps.size()));
-    std::vector<Timestamp> ::const_iterator _iter53;
-    for (_iter53 = this->timestamps.begin(); _iter53 != this->timestamps.end(); ++_iter53)
-    {
-      xfer += (*_iter53).write(oprot);
-    }
-    xfer += oprot->writeListEnd();
-  }
-  xfer += oprot->writeFieldEnd();
-
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -112,18 +80,6 @@ uint32_t FileService_getFile__pargs::write(::apache::thrift::protocol::TProtocol
 
   xfer += oprot->writeFieldBegin("file_id", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->file_id)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("timestamps", ::apache::thrift::protocol::T_LIST, 2);
-  {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->timestamps)).size()));
-    std::vector<Timestamp> ::const_iterator _iter54;
-    for (_iter54 = (*(this->timestamps)).begin(); _iter54 != (*(this->timestamps)).end(); ++_iter54)
-    {
-      xfer += (*_iter54).write(oprot);
-    }
-    xfer += oprot->writeListEnd();
-  }
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -239,20 +195,19 @@ uint32_t FileService_getFile__presult::read(::apache::thrift::protocol::TProtoco
   return xfer;
 }
 
-void FileServiceClient::getFile_(File_& _return, const std::string& file_id, const std::vector<Timestamp> & timestamps)
+void FileServiceClient::getFile_(File_& _return, const std::string& file_id)
 {
-  send_getFile_(file_id, timestamps);
+  send_getFile_(file_id);
   recv_getFile_(_return);
 }
 
-void FileServiceClient::send_getFile_(const std::string& file_id, const std::vector<Timestamp> & timestamps)
+void FileServiceClient::send_getFile_(const std::string& file_id)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("getFile_", ::apache::thrift::protocol::T_CALL, cseqid);
 
   FileService_getFile__pargs args;
   args.file_id = &file_id;
-  args.timestamps = &timestamps;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -340,7 +295,7 @@ void FileServiceProcessor::process_getFile_(int32_t seqid, ::apache::thrift::pro
 
   FileService_getFile__result result;
   try {
-    iface_->getFile_(result.success, args.file_id, args.timestamps);
+    iface_->getFile_(result.success, args.file_id);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
@@ -378,13 +333,13 @@ void FileServiceProcessor::process_getFile_(int32_t seqid, ::apache::thrift::pro
   return processor;
 }
 
-void FileServiceConcurrentClient::getFile_(File_& _return, const std::string& file_id, const std::vector<Timestamp> & timestamps)
+void FileServiceConcurrentClient::getFile_(File_& _return, const std::string& file_id)
 {
-  int32_t seqid = send_getFile_(file_id, timestamps);
+  int32_t seqid = send_getFile_(file_id);
   recv_getFile_(_return, seqid);
 }
 
-int32_t FileServiceConcurrentClient::send_getFile_(const std::string& file_id, const std::vector<Timestamp> & timestamps)
+int32_t FileServiceConcurrentClient::send_getFile_(const std::string& file_id)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
@@ -392,7 +347,6 @@ int32_t FileServiceConcurrentClient::send_getFile_(const std::string& file_id, c
 
   FileService_getFile__pargs args;
   args.file_id = &file_id;
-  args.timestamps = &timestamps;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

@@ -20,8 +20,6 @@
 
 namespace twitter {
 
-class Timestamp;
-
 class Tweet_;
 
 class User_;
@@ -30,67 +28,12 @@ class File_;
 
 class Tweet;
 
-typedef struct _Timestamp__isset {
-  _Timestamp__isset() : service_name(false), function_name(false), timestamp(false) {}
-  bool service_name :1;
-  bool function_name :1;
-  bool timestamp :1;
-} _Timestamp__isset;
-
-class Timestamp : public virtual ::apache::thrift::TBase {
- public:
-
-  Timestamp(const Timestamp&);
-  Timestamp& operator=(const Timestamp&);
-  Timestamp() : service_name(), function_name(), timestamp(0) {
-  }
-
-  virtual ~Timestamp() throw();
-  std::string service_name;
-  std::string function_name;
-  int64_t timestamp;
-
-  _Timestamp__isset __isset;
-
-  void __set_service_name(const std::string& val);
-
-  void __set_function_name(const std::string& val);
-
-  void __set_timestamp(const int64_t val);
-
-  bool operator == (const Timestamp & rhs) const
-  {
-    if (!(service_name == rhs.service_name))
-      return false;
-    if (!(function_name == rhs.function_name))
-      return false;
-    if (!(timestamp == rhs.timestamp))
-      return false;
-    return true;
-  }
-  bool operator != (const Timestamp &rhs) const {
-    return !(*this == rhs);
-  }
-
-  bool operator < (const Timestamp & ) const;
-
-  uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
-
-  virtual void printTo(std::ostream& out) const;
-};
-
-void swap(Timestamp &a, Timestamp &b);
-
-std::ostream& operator<<(std::ostream& out, const Timestamp& obj);
-
 typedef struct _Tweet___isset {
-  _Tweet___isset() : tweet_id(false), user_id(false), file_id(false), text(false), timestamps(false) {}
+  _Tweet___isset() : tweet_id(false), user_id(false), file_id(false), text(false) {}
   bool tweet_id :1;
   bool user_id :1;
   bool file_id :1;
   bool text :1;
-  bool timestamps :1;
 } _Tweet___isset;
 
 class Tweet_ : public virtual ::apache::thrift::TBase {
@@ -106,7 +49,6 @@ class Tweet_ : public virtual ::apache::thrift::TBase {
   std::string user_id;
   std::string file_id;
   std::string text;
-  std::vector<Timestamp>  timestamps;
 
   _Tweet___isset __isset;
 
@@ -118,8 +60,6 @@ class Tweet_ : public virtual ::apache::thrift::TBase {
 
   void __set_text(const std::string& val);
 
-  void __set_timestamps(const std::vector<Timestamp> & val);
-
   bool operator == (const Tweet_ & rhs) const
   {
     if (!(tweet_id == rhs.tweet_id))
@@ -129,8 +69,6 @@ class Tweet_ : public virtual ::apache::thrift::TBase {
     if (!(file_id == rhs.file_id))
       return false;
     if (!(text == rhs.text))
-      return false;
-    if (!(timestamps == rhs.timestamps))
       return false;
     return true;
   }
@@ -151,11 +89,10 @@ void swap(Tweet_ &a, Tweet_ &b);
 std::ostream& operator<<(std::ostream& out, const Tweet_& obj);
 
 typedef struct _User___isset {
-  _User___isset() : user_id(false), username(false), homepage(false), timestamps(false) {}
+  _User___isset() : user_id(false), username(false), homepage(false) {}
   bool user_id :1;
   bool username :1;
   bool homepage :1;
-  bool timestamps :1;
 } _User___isset;
 
 class User_ : public virtual ::apache::thrift::TBase {
@@ -170,7 +107,6 @@ class User_ : public virtual ::apache::thrift::TBase {
   std::string user_id;
   std::string username;
   std::string homepage;
-  std::vector<Timestamp>  timestamps;
 
   _User___isset __isset;
 
@@ -180,8 +116,6 @@ class User_ : public virtual ::apache::thrift::TBase {
 
   void __set_homepage(const std::string& val);
 
-  void __set_timestamps(const std::vector<Timestamp> & val);
-
   bool operator == (const User_ & rhs) const
   {
     if (!(user_id == rhs.user_id))
@@ -189,8 +123,6 @@ class User_ : public virtual ::apache::thrift::TBase {
     if (!(username == rhs.username))
       return false;
     if (!(homepage == rhs.homepage))
-      return false;
-    if (!(timestamps == rhs.timestamps))
       return false;
     return true;
   }
@@ -211,10 +143,9 @@ void swap(User_ &a, User_ &b);
 std::ostream& operator<<(std::ostream& out, const User_& obj);
 
 typedef struct _File___isset {
-  _File___isset() : file_id(false), content(false), timestamps(false) {}
+  _File___isset() : file_id(false), content(false) {}
   bool file_id :1;
   bool content :1;
-  bool timestamps :1;
 } _File___isset;
 
 class File_ : public virtual ::apache::thrift::TBase {
@@ -228,7 +159,6 @@ class File_ : public virtual ::apache::thrift::TBase {
   virtual ~File_() throw();
   std::string file_id;
   std::string content;
-  std::vector<Timestamp>  timestamps;
 
   _File___isset __isset;
 
@@ -236,15 +166,11 @@ class File_ : public virtual ::apache::thrift::TBase {
 
   void __set_content(const std::string& val);
 
-  void __set_timestamps(const std::vector<Timestamp> & val);
-
   bool operator == (const File_ & rhs) const
   {
     if (!(file_id == rhs.file_id))
       return false;
     if (!(content == rhs.content))
-      return false;
-    if (!(timestamps == rhs.timestamps))
       return false;
     return true;
   }
@@ -265,12 +191,11 @@ void swap(File_ &a, File_ &b);
 std::ostream& operator<<(std::ostream& out, const File_& obj);
 
 typedef struct _Tweet__isset {
-  _Tweet__isset() : tweet_id(false), user(false), text(false), file(false), timestamps(false) {}
+  _Tweet__isset() : tweet_id(false), user(false), text(false), file(false) {}
   bool tweet_id :1;
   bool user :1;
   bool text :1;
   bool file :1;
-  bool timestamps :1;
 } _Tweet__isset;
 
 class Tweet : public virtual ::apache::thrift::TBase {
@@ -286,7 +211,6 @@ class Tweet : public virtual ::apache::thrift::TBase {
   User_ user;
   std::string text;
   File_ file;
-  std::vector<Timestamp>  timestamps;
 
   _Tweet__isset __isset;
 
@@ -298,8 +222,6 @@ class Tweet : public virtual ::apache::thrift::TBase {
 
   void __set_file(const File_& val);
 
-  void __set_timestamps(const std::vector<Timestamp> & val);
-
   bool operator == (const Tweet & rhs) const
   {
     if (!(tweet_id == rhs.tweet_id))
@@ -309,8 +231,6 @@ class Tweet : public virtual ::apache::thrift::TBase {
     if (!(text == rhs.text))
       return false;
     if (!(file == rhs.file))
-      return false;
-    if (!(timestamps == rhs.timestamps))
       return false;
     return true;
   }

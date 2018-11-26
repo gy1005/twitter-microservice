@@ -14,7 +14,10 @@
 # docker stop file_memcached
 # docker rm file_memcached
 
-killall UserService
-killall FileService
-killall TweetService
-killall ComposeService
+docker stop twitter-nginx 
+docker rm twitter-nginx 
+
+# killall UserService
+# killall FileService
+# killall TweetService
+# killall ComposeService

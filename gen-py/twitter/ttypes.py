@@ -16,84 +16,6 @@ from thrift.transport import TTransport
 all_structs = []
 
 
-class Timestamp(object):
-    """
-    Attributes:
-     - service_name
-     - function_name
-     - timestamp
-    """
-
-
-    def __init__(self, service_name=None, function_name=None, timestamp=None,):
-        self.service_name = service_name
-        self.function_name = function_name
-        self.timestamp = timestamp
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 1:
-                if ftype == TType.STRING:
-                    self.service_name = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 2:
-                if ftype == TType.STRING:
-                    self.function_name = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 3:
-                if ftype == TType.I64:
-                    self.timestamp = iprot.readI64()
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('Timestamp')
-        if self.service_name is not None:
-            oprot.writeFieldBegin('service_name', TType.STRING, 1)
-            oprot.writeString(self.service_name.encode('utf-8') if sys.version_info[0] == 2 else self.service_name)
-            oprot.writeFieldEnd()
-        if self.function_name is not None:
-            oprot.writeFieldBegin('function_name', TType.STRING, 2)
-            oprot.writeString(self.function_name.encode('utf-8') if sys.version_info[0] == 2 else self.function_name)
-            oprot.writeFieldEnd()
-        if self.timestamp is not None:
-            oprot.writeFieldBegin('timestamp', TType.I64, 3)
-            oprot.writeI64(self.timestamp)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-
-
 class Tweet_(object):
     """
     Attributes:
@@ -101,16 +23,14 @@ class Tweet_(object):
      - user_id
      - file_id
      - text
-     - timestamps
     """
 
 
-    def __init__(self, tweet_id=None, user_id=None, file_id=None, text=None, timestamps=None,):
+    def __init__(self, tweet_id=None, user_id=None, file_id=None, text=None,):
         self.tweet_id = tweet_id
         self.user_id = user_id
         self.file_id = file_id
         self.text = text
-        self.timestamps = timestamps
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -141,17 +61,6 @@ class Tweet_(object):
                     self.text = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
-            elif fid == 5:
-                if ftype == TType.LIST:
-                    self.timestamps = []
-                    (_etype3, _size0) = iprot.readListBegin()
-                    for _i4 in range(_size0):
-                        _elem5 = Timestamp()
-                        _elem5.read(iprot)
-                        self.timestamps.append(_elem5)
-                    iprot.readListEnd()
-                else:
-                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -178,13 +87,6 @@ class Tweet_(object):
             oprot.writeFieldBegin('text', TType.STRING, 4)
             oprot.writeString(self.text.encode('utf-8') if sys.version_info[0] == 2 else self.text)
             oprot.writeFieldEnd()
-        if self.timestamps is not None:
-            oprot.writeFieldBegin('timestamps', TType.LIST, 5)
-            oprot.writeListBegin(TType.STRUCT, len(self.timestamps))
-            for iter6 in self.timestamps:
-                iter6.write(oprot)
-            oprot.writeListEnd()
-            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -209,15 +111,13 @@ class User_(object):
      - user_id
      - username
      - homepage
-     - timestamps
     """
 
 
-    def __init__(self, user_id=None, username=None, homepage=None, timestamps=None,):
+    def __init__(self, user_id=None, username=None, homepage=None,):
         self.user_id = user_id
         self.username = username
         self.homepage = homepage
-        self.timestamps = timestamps
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -243,17 +143,6 @@ class User_(object):
                     self.homepage = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
-            elif fid == 4:
-                if ftype == TType.LIST:
-                    self.timestamps = []
-                    (_etype10, _size7) = iprot.readListBegin()
-                    for _i11 in range(_size7):
-                        _elem12 = Timestamp()
-                        _elem12.read(iprot)
-                        self.timestamps.append(_elem12)
-                    iprot.readListEnd()
-                else:
-                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -275,13 +164,6 @@ class User_(object):
         if self.homepage is not None:
             oprot.writeFieldBegin('homepage', TType.STRING, 3)
             oprot.writeString(self.homepage.encode('utf-8') if sys.version_info[0] == 2 else self.homepage)
-            oprot.writeFieldEnd()
-        if self.timestamps is not None:
-            oprot.writeFieldBegin('timestamps', TType.LIST, 4)
-            oprot.writeListBegin(TType.STRUCT, len(self.timestamps))
-            for iter13 in self.timestamps:
-                iter13.write(oprot)
-            oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -306,14 +188,12 @@ class File_(object):
     Attributes:
      - file_id
      - content
-     - timestamps
     """
 
 
-    def __init__(self, file_id=None, content=None, timestamps=None,):
+    def __init__(self, file_id=None, content=None,):
         self.file_id = file_id
         self.content = content
-        self.timestamps = timestamps
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -334,17 +214,6 @@ class File_(object):
                     self.content = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
-            elif fid == 3:
-                if ftype == TType.LIST:
-                    self.timestamps = []
-                    (_etype17, _size14) = iprot.readListBegin()
-                    for _i18 in range(_size14):
-                        _elem19 = Timestamp()
-                        _elem19.read(iprot)
-                        self.timestamps.append(_elem19)
-                    iprot.readListEnd()
-                else:
-                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -362,13 +231,6 @@ class File_(object):
         if self.content is not None:
             oprot.writeFieldBegin('content', TType.STRING, 2)
             oprot.writeString(self.content.encode('utf-8') if sys.version_info[0] == 2 else self.content)
-            oprot.writeFieldEnd()
-        if self.timestamps is not None:
-            oprot.writeFieldBegin('timestamps', TType.LIST, 3)
-            oprot.writeListBegin(TType.STRUCT, len(self.timestamps))
-            for iter20 in self.timestamps:
-                iter20.write(oprot)
-            oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -395,16 +257,14 @@ class Tweet(object):
      - user
      - text
      - file
-     - timestamps
     """
 
 
-    def __init__(self, tweet_id=None, user=None, text=None, file=None, timestamps=None,):
+    def __init__(self, tweet_id=None, user=None, text=None, file=None,):
         self.tweet_id = tweet_id
         self.user = user
         self.text = text
         self.file = file
-        self.timestamps = timestamps
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -437,17 +297,6 @@ class Tweet(object):
                     self.file.read(iprot)
                 else:
                     iprot.skip(ftype)
-            elif fid == 5:
-                if ftype == TType.LIST:
-                    self.timestamps = []
-                    (_etype24, _size21) = iprot.readListBegin()
-                    for _i25 in range(_size21):
-                        _elem26 = Timestamp()
-                        _elem26.read(iprot)
-                        self.timestamps.append(_elem26)
-                    iprot.readListEnd()
-                else:
-                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -474,13 +323,6 @@ class Tweet(object):
             oprot.writeFieldBegin('file', TType.STRUCT, 4)
             self.file.write(oprot)
             oprot.writeFieldEnd()
-        if self.timestamps is not None:
-            oprot.writeFieldBegin('timestamps', TType.LIST, 5)
-            oprot.writeListBegin(TType.STRUCT, len(self.timestamps))
-            for iter27 in self.timestamps:
-                iter27.write(oprot)
-            oprot.writeListEnd()
-            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -497,13 +339,6 @@ class Tweet(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(Timestamp)
-Timestamp.thrift_spec = (
-    None,  # 0
-    (1, TType.STRING, 'service_name', 'UTF8', None, ),  # 1
-    (2, TType.STRING, 'function_name', 'UTF8', None, ),  # 2
-    (3, TType.I64, 'timestamp', None, None, ),  # 3
-)
 all_structs.append(Tweet_)
 Tweet_.thrift_spec = (
     None,  # 0
@@ -511,7 +346,6 @@ Tweet_.thrift_spec = (
     (2, TType.STRING, 'user_id', 'UTF8', None, ),  # 2
     (3, TType.STRING, 'file_id', 'UTF8', None, ),  # 3
     (4, TType.STRING, 'text', 'UTF8', None, ),  # 4
-    (5, TType.LIST, 'timestamps', (TType.STRUCT, [Timestamp, None], False), None, ),  # 5
 )
 all_structs.append(User_)
 User_.thrift_spec = (
@@ -519,14 +353,12 @@ User_.thrift_spec = (
     (1, TType.STRING, 'user_id', 'UTF8', None, ),  # 1
     (2, TType.STRING, 'username', 'UTF8', None, ),  # 2
     (3, TType.STRING, 'homepage', 'UTF8', None, ),  # 3
-    (4, TType.LIST, 'timestamps', (TType.STRUCT, [Timestamp, None], False), None, ),  # 4
 )
 all_structs.append(File_)
 File_.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'file_id', 'UTF8', None, ),  # 1
     (2, TType.STRING, 'content', 'UTF8', None, ),  # 2
-    (3, TType.LIST, 'timestamps', (TType.STRUCT, [Timestamp, None], False), None, ),  # 3
 )
 all_structs.append(Tweet)
 Tweet.thrift_spec = (
@@ -535,7 +367,6 @@ Tweet.thrift_spec = (
     (2, TType.STRUCT, 'user', [User_, None], None, ),  # 2
     (3, TType.STRING, 'text', 'UTF8', None, ),  # 3
     (4, TType.STRUCT, 'file', [File_, None], None, ),  # 4
-    (5, TType.LIST, 'timestamps', (TType.STRUCT, [Timestamp, None], False), None, ),  # 5
 )
 fix_spec(all_structs)
 del all_structs

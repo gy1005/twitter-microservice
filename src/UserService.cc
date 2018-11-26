@@ -8,7 +8,11 @@
 
 #include "../include/Utils.h"
 #include "UserService.h"
+#include <thread>
+#include <iostream>
+#include <fstream>
 
+using namespace::std;
 using namespace apache::thrift;
 using namespace apache::thrift::concurrency;
 using namespace apache::thrift::protocol;
@@ -25,6 +29,7 @@ int main(int argc, char *argv[]) {
   string user_mongodb_addr = config_json["UserMongoDB"]["addr"];
   int user_mongodb_port = config_json["UserMongoDB"]["port"];
 
+
   TThreadedServer server(
       stdcxx::make_shared<UserServiceProcessor>(
           stdcxx::make_shared<UserServiceHandler>(user_memcached_addr,
@@ -35,6 +40,7 @@ int main(int argc, char *argv[]) {
       stdcxx::make_shared<TBufferedTransportFactory>(),
       stdcxx::make_shared<TBinaryProtocolFactory>()
   );
+
 
   cout << "Starting the server..." << endl;
   server.serve();

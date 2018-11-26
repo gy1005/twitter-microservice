@@ -21,7 +21,7 @@ namespace twitter {
 class TweetServiceIf {
  public:
   virtual ~TweetServiceIf() {}
-  virtual void getTweet_(Tweet_& _return, const std::string& tweet_id, const std::vector<Timestamp> & timestamps) = 0;
+  virtual void getTweet_(Tweet_& _return, const std::string& tweet_id) = 0;
 };
 
 class TweetServiceIfFactory {
@@ -51,15 +51,14 @@ class TweetServiceIfSingletonFactory : virtual public TweetServiceIfFactory {
 class TweetServiceNull : virtual public TweetServiceIf {
  public:
   virtual ~TweetServiceNull() {}
-  void getTweet_(Tweet_& /* _return */, const std::string& /* tweet_id */, const std::vector<Timestamp> & /* timestamps */) {
+  void getTweet_(Tweet_& /* _return */, const std::string& /* tweet_id */) {
     return;
   }
 };
 
 typedef struct _TweetService_getTweet__args__isset {
-  _TweetService_getTweet__args__isset() : tweet_id(false), timestamps(false) {}
+  _TweetService_getTweet__args__isset() : tweet_id(false) {}
   bool tweet_id :1;
-  bool timestamps :1;
 } _TweetService_getTweet__args__isset;
 
 class TweetService_getTweet__args {
@@ -72,19 +71,14 @@ class TweetService_getTweet__args {
 
   virtual ~TweetService_getTweet__args() throw();
   std::string tweet_id;
-  std::vector<Timestamp>  timestamps;
 
   _TweetService_getTweet__args__isset __isset;
 
   void __set_tweet_id(const std::string& val);
 
-  void __set_timestamps(const std::vector<Timestamp> & val);
-
   bool operator == (const TweetService_getTweet__args & rhs) const
   {
     if (!(tweet_id == rhs.tweet_id))
-      return false;
-    if (!(timestamps == rhs.timestamps))
       return false;
     return true;
   }
@@ -106,7 +100,6 @@ class TweetService_getTweet__pargs {
 
   virtual ~TweetService_getTweet__pargs() throw();
   const std::string* tweet_id;
-  const std::vector<Timestamp> * timestamps;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -192,8 +185,8 @@ class TweetServiceClient : virtual public TweetServiceIf {
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void getTweet_(Tweet_& _return, const std::string& tweet_id, const std::vector<Timestamp> & timestamps);
-  void send_getTweet_(const std::string& tweet_id, const std::vector<Timestamp> & timestamps);
+  void getTweet_(Tweet_& _return, const std::string& tweet_id);
+  void send_getTweet_(const std::string& tweet_id);
   void recv_getTweet_(Tweet_& _return);
  protected:
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
@@ -243,13 +236,13 @@ class TweetServiceMultiface : virtual public TweetServiceIf {
     ifaces_.push_back(iface);
   }
  public:
-  void getTweet_(Tweet_& _return, const std::string& tweet_id, const std::vector<Timestamp> & timestamps) {
+  void getTweet_(Tweet_& _return, const std::string& tweet_id) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->getTweet_(_return, tweet_id, timestamps);
+      ifaces_[i]->getTweet_(_return, tweet_id);
     }
-    ifaces_[i]->getTweet_(_return, tweet_id, timestamps);
+    ifaces_[i]->getTweet_(_return, tweet_id);
     return;
   }
 
@@ -283,8 +276,8 @@ class TweetServiceConcurrentClient : virtual public TweetServiceIf {
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void getTweet_(Tweet_& _return, const std::string& tweet_id, const std::vector<Timestamp> & timestamps);
-  int32_t send_getTweet_(const std::string& tweet_id, const std::vector<Timestamp> & timestamps);
+  void getTweet_(Tweet_& _return, const std::string& tweet_id);
+  int32_t send_getTweet_(const std::string& tweet_id);
   void recv_getTweet_(Tweet_& _return, const int32_t seqid);
  protected:
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;

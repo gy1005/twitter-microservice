@@ -1,7 +1,3 @@
-//
-// Created by yugan on 9/30/18.
-//
-
 #ifndef TWITTER_MICROSERVICE_FILESERVICE_H
 #define TWITTER_MICROSERVICE_FILESERVICE_H
 

@@ -1,42 +1,46 @@
 {
   "ComposeService": {
-    "addr": "localhost",
+    "addr": "127.0.0.1",
     "port": 9000
   },
   "TweetService": {
-    "addr": "localhost",
+    "addr": "127.0.0.1",
     "port": 9001
   },
   "UserService": {
-    "addr": "localhost",
+    "addr": "127.0.0.1",
     "port": 9002
   },
   "FileService": {
-    "addr": "localhost",
+    "addr": "127.0.0.1",
     "port": 9003
   },
   "TweetMemcached": {
-    "addr": "localhost",
+    "addr": "127.0.0.1",
     "port": 10000
   },
   "TweetMongoDB": {
-    "addr": "localhost",
+    "addr": "127.0.0.1",
     "port": 10001
   },
   "UserMemcached": {
-    "addr": "localhost",
+    "addr": "127.0.0.1",
     "port": 10002
   },
   "UserMongoDB": {
-    "addr": "localhost",
+    "addr": "127.0.0.1",
     "port": 10003
   },
   "FileMemcached": {
-    "addr": "localhost",
+    "addr": "127.0.0.1",
     "port": 10004
   },
   "FileMongoDB": {
-    "addr": "localhost",
+    "addr": "127.0.0.1",
     "port": 10005
+  },
+  "Nginx": {
+    "addr": "127.0.0.1",
+    "port": 11000
   }
 }

@@ -42,26 +42,6 @@ uint32_t TweetService_getTweet__args::read(::apache::thrift::protocol::TProtocol
           xfer += iprot->skip(ftype);
         }
         break;
-      case 2:
-        if (ftype == ::apache::thrift::protocol::T_LIST) {
-          {
-            this->timestamps.clear();
-            uint32_t _size41;
-            ::apache::thrift::protocol::TType _etype44;
-            xfer += iprot->readListBegin(_etype44, _size41);
-            this->timestamps.resize(_size41);
-            uint32_t _i45;
-            for (_i45 = 0; _i45 < _size41; ++_i45)
-            {
-              xfer += this->timestamps[_i45].read(iprot);
-            }
-            xfer += iprot->readListEnd();
-          }
-          this->__isset.timestamps = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -83,18 +63,6 @@ uint32_t TweetService_getTweet__args::write(::apache::thrift::protocol::TProtoco
   xfer += oprot->writeString(this->tweet_id);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("timestamps", ::apache::thrift::protocol::T_LIST, 2);
-  {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>(this->timestamps.size()));
-    std::vector<Timestamp> ::const_iterator _iter46;
-    for (_iter46 = this->timestamps.begin(); _iter46 != this->timestamps.end(); ++_iter46)
-    {
-      xfer += (*_iter46).write(oprot);
-    }
-    xfer += oprot->writeListEnd();
-  }
-  xfer += oprot->writeFieldEnd();
-
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -112,18 +80,6 @@ uint32_t TweetService_getTweet__pargs::write(::apache::thrift::protocol::TProtoc
 
   xfer += oprot->writeFieldBegin("tweet_id", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->tweet_id)));
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("timestamps", ::apache::thrift::protocol::T_LIST, 2);
-  {
-    xfer += oprot->writeListBegin(::apache::thrift::protocol::T_STRUCT, static_cast<uint32_t>((*(this->timestamps)).size()));
-    std::vector<Timestamp> ::const_iterator _iter47;
-    for (_iter47 = (*(this->timestamps)).begin(); _iter47 != (*(this->timestamps)).end(); ++_iter47)
-    {
-      xfer += (*_iter47).write(oprot);
-    }
-    xfer += oprot->writeListEnd();
-  }
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -239,20 +195,19 @@ uint32_t TweetService_getTweet__presult::read(::apache::thrift::protocol::TProto
   return xfer;
 }
 
-void TweetServiceClient::getTweet_(Tweet_& _return, const std::string& tweet_id, const std::vector<Timestamp> & timestamps)
+void TweetServiceClient::getTweet_(Tweet_& _return, const std::string& tweet_id)
 {
-  send_getTweet_(tweet_id, timestamps);
+  send_getTweet_(tweet_id);
   recv_getTweet_(_return);
 }
 
-void TweetServiceClient::send_getTweet_(const std::string& tweet_id, const std::vector<Timestamp> & timestamps)
+void TweetServiceClient::send_getTweet_(const std::string& tweet_id)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("getTweet_", ::apache::thrift::protocol::T_CALL, cseqid);
 
   TweetService_getTweet__pargs args;
   args.tweet_id = &tweet_id;
-  args.timestamps = &timestamps;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -340,7 +295,7 @@ void TweetServiceProcessor::process_getTweet_(int32_t seqid, ::apache::thrift::p
 
   TweetService_getTweet__result result;
   try {
-    iface_->getTweet_(result.success, args.tweet_id, args.timestamps);
+    iface_->getTweet_(result.success, args.tweet_id);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
@@ -378,13 +333,13 @@ void TweetServiceProcessor::process_getTweet_(int32_t seqid, ::apache::thrift::p
   return processor;
 }
 
-void TweetServiceConcurrentClient::getTweet_(Tweet_& _return, const std::string& tweet_id, const std::vector<Timestamp> & timestamps)
+void TweetServiceConcurrentClient::getTweet_(Tweet_& _return, const std::string& tweet_id)
 {
-  int32_t seqid = send_getTweet_(tweet_id, timestamps);
+  int32_t seqid = send_getTweet_(tweet_id);
   recv_getTweet_(_return, seqid);
 }
 
-int32_t TweetServiceConcurrentClient::send_getTweet_(const std::string& tweet_id, const std::vector<Timestamp> & timestamps)
+int32_t TweetServiceConcurrentClient::send_getTweet_(const std::string& tweet_id)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
@@ -392,7 +347,6 @@ int32_t TweetServiceConcurrentClient::send_getTweet_(const std::string& tweet_id
 
   TweetService_getTweet__pargs args;
   args.tweet_id = &tweet_id;
-  args.timestamps = &timestamps;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

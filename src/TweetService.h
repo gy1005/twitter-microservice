@@ -1,9 +1,3 @@
-
-
-//
-// Created by yugan on 9/30/18.
-//
-
 #ifndef TWITTER_MICROSERVICE_TWEETSERVICE_H
 #define TWITTER_MICROSERVICE_TWEETSERVICE_H
 

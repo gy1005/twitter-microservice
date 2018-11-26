@@ -20,7 +20,7 @@ class FileServiceHandler : virtual public FileServiceIf {
     // Your initialization goes here
   }
 
-  void getFile_(File_& _return, const std::string& file_id, const std::vector<Timestamp> & timestamps) {
+  void getFile_(File_& _return, const std::string& file_id) {
     // Your implementation goes here
     printf("getFile_\n");
   }

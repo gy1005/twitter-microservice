@@ -6,12 +6,14 @@
 #define TWITTER_MICROSERVICE_UTILS_H
 
 #include <fstream>
+#include <iostream>
 #include <cassert>
-#include <vector>
+#include <map>
 #include <mutex>
 #include <chrono>
 #include <nlohmann/json.hpp>
 #include "../gen-cpp/twitter_types.h"
+#include "../hdr_histogram/hdr_histogram.h"
 
 
 using json = nlohmann::json;
@@ -29,10 +31,11 @@ json load_config_file(const string &file_name) {
   return config;
 }
 
-void append_timestamp(const string &service_name, const string &func_name,
-    vector<Timestamp> &timestamps, mutex *mtx) {
+void add_timestamp(const string &service_name, const string &func_name,
+    json &header, mutex *mtx) {
   long now_us = duration_cast<microseconds>(
       system_clock::now().time_since_epoch()).count();
+  
   Timestamp timestamp;
   timestamp.service_name = service_name;
   timestamp.function_name = func_name;

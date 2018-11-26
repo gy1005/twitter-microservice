@@ -20,7 +20,7 @@ class TweetServiceHandler : virtual public TweetServiceIf {
     // Your initialization goes here
   }
 
-  void getTweet_(Tweet_& _return, const std::string& tweet_id, const std::vector<Timestamp> & timestamps) {
+  void getTweet_(Tweet_& _return, const std::string& tweet_id) {
     // Your implementation goes here
     printf("getTweet_\n");
   }

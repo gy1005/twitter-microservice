@@ -6,6 +6,7 @@ from multiprocessing import Process
 import random
 import string
 import json
+import numpy as np
 
 def gen_dict(options, index):
   if options.type == "user":
@@ -68,7 +69,7 @@ def worker(options, worker_id, service_config):
     print("Type is not identified.")
     return
 
-  for i in range(int(options.n_records / options.n_threads)):
+  for i in range(int(np.ceil(options.n_records / options.n_threads))):
     collection.insert_one(gen_dict(options, int(i + worker_id
                                    * options.n_records / options.n_threads)))
     if i % (options.n_records / options.n_threads / 50) == 0:
@@ -82,7 +83,7 @@ def main():
   parser.add_option("-r", "--n_records", type="int", dest="n_records",
                     default=1000)
   parser.add_option("-t", "--n_threads", type="int", dest="n_threads",
-                    default=16)
+                    default=8)
   parser.add_option("-T", "--type", type="string", dest="type")
   parser.add_option("-s", "--text_size", type="int", dest="text_size",
                     default=280)

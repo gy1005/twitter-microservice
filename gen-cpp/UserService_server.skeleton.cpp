@@ -20,7 +20,7 @@ class UserServiceHandler : virtual public UserServiceIf {
     // Your initialization goes here
   }
 
-  void getUser_(User_& _return, const std::string& user_id, const std::vector<Timestamp> & timestamps) {
+  void getUser_(User_& _return, const std::string& user_id) {
     // Your implementation goes here
     printf("getUser_\n");
   }

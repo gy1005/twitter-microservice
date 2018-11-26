@@ -19,11 +19,10 @@ all_structs = []
 
 
 class Iface(object):
-    def getTweet_(self, tweet_id, timestamps):
+    def getTweet_(self, tweet_id):
         """
         Parameters:
          - tweet_id
-         - timestamps
         """
         pass
 
@@ -35,20 +34,18 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def getTweet_(self, tweet_id, timestamps):
+    def getTweet_(self, tweet_id):
         """
         Parameters:
          - tweet_id
-         - timestamps
         """
-        self.send_getTweet_(tweet_id, timestamps)
+        self.send_getTweet_(tweet_id)
         return self.recv_getTweet_()
 
-    def send_getTweet_(self, tweet_id, timestamps):
+    def send_getTweet_(self, tweet_id):
         self._oprot.writeMessageBegin('getTweet_', TMessageType.CALL, self._seqid)
         args = getTweet__args()
         args.tweet_id = tweet_id
-        args.timestamps = timestamps
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -96,7 +93,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = getTweet__result()
         try:
-            result.success = self._handler.getTweet_(args.tweet_id, args.timestamps)
+            result.success = self._handler.getTweet_(args.tweet_id)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -120,13 +117,11 @@ class getTweet__args(object):
     """
     Attributes:
      - tweet_id
-     - timestamps
     """
 
 
-    def __init__(self, tweet_id=None, timestamps=None,):
+    def __init__(self, tweet_id=None,):
         self.tweet_id = tweet_id
-        self.timestamps = timestamps
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -142,17 +137,6 @@ class getTweet__args(object):
                     self.tweet_id = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
-            elif fid == 2:
-                if ftype == TType.LIST:
-                    self.timestamps = []
-                    (_etype38, _size35) = iprot.readListBegin()
-                    for _i39 in range(_size35):
-                        _elem40 = Timestamp()
-                        _elem40.read(iprot)
-                        self.timestamps.append(_elem40)
-                    iprot.readListEnd()
-                else:
-                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -166,13 +150,6 @@ class getTweet__args(object):
         if self.tweet_id is not None:
             oprot.writeFieldBegin('tweet_id', TType.STRING, 1)
             oprot.writeString(self.tweet_id.encode('utf-8') if sys.version_info[0] == 2 else self.tweet_id)
-            oprot.writeFieldEnd()
-        if self.timestamps is not None:
-            oprot.writeFieldBegin('timestamps', TType.LIST, 2)
-            oprot.writeListBegin(TType.STRUCT, len(self.timestamps))
-            for iter41 in self.timestamps:
-                iter41.write(oprot)
-            oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -194,7 +171,6 @@ all_structs.append(getTweet__args)
 getTweet__args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'tweet_id', 'UTF8', None, ),  # 1
-    (2, TType.LIST, 'timestamps', (TType.STRUCT, [Timestamp, None], False), None, ),  # 2
 )
 
 

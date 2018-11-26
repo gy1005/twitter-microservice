@@ -103,13 +103,13 @@ target_link_libraries(ComposeService PUBLIC
         nlohmann_json::nlohmann_json
         )
 
-add_executable(Client
-        src/Client.cc
-        gen-cpp/ComposeService.cpp
-        gen-cpp/twitter_types.cpp
-        )
-target_link_libraries(Client PUBLIC
-        thrift::thrift_static
-        thrift::thriftnb_static
-        nlohmann_json::nlohmann_json
-        )
+# add_executable(Client
+#         src/Client.cc
+#         gen-cpp/ComposeService.cpp
+#         gen-cpp/twitter_types.cpp
+#         )
+# target_link_libraries(Client PUBLIC
+#         thrift::thrift_static
+#         thrift::thriftnb_static
+#         nlohmann_json::nlohmann_json
+#         )

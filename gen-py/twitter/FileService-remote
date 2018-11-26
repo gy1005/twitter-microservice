@@ -24,7 +24,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] [-novalidate] [-ca_certs certs] [-keyfile keyfile] [-certfile certfile] function [arg1 [arg2...]]')
     print('')
     print('Functions:')
-    print('  File_ getFile_(string file_id,  timestamps)')
+    print('  File_ getFile_(string file_id)')
     print('')
     sys.exit(0)
 
@@ -105,10 +105,10 @@ client = FileService.Client(protocol)
 transport.open()
 
 if cmd == 'getFile_':
-    if len(args) != 2:
-        print('getFile_ requires 2 args')
+    if len(args) != 1:
+        print('getFile_ requires 1 args')
         sys.exit(1)
-    pp.pprint(client.getFile_(args[0], eval(args[1]),))
+    pp.pprint(client.getFile_(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)
