@@ -29,11 +29,12 @@ class File_;
 class Tweet;
 
 typedef struct _Tweet___isset {
-  _Tweet___isset() : tweet_id(false), user_id(false), file_id(false), text(false) {}
+  _Tweet___isset() : tweet_id(false), user_id(false), file_id(false), text(false), header(false) {}
   bool tweet_id :1;
   bool user_id :1;
   bool file_id :1;
   bool text :1;
+  bool header :1;
 } _Tweet___isset;
 
 class Tweet_ : public virtual ::apache::thrift::TBase {
@@ -41,7 +42,7 @@ class Tweet_ : public virtual ::apache::thrift::TBase {
 
   Tweet_(const Tweet_&);
   Tweet_& operator=(const Tweet_&);
-  Tweet_() : tweet_id(), user_id(), file_id(), text() {
+  Tweet_() : tweet_id(), user_id(), file_id(), text(), header() {
   }
 
   virtual ~Tweet_() throw();
@@ -49,6 +50,7 @@ class Tweet_ : public virtual ::apache::thrift::TBase {
   std::string user_id;
   std::string file_id;
   std::string text;
+  std::string header;
 
   _Tweet___isset __isset;
 
@@ -60,6 +62,8 @@ class Tweet_ : public virtual ::apache::thrift::TBase {
 
   void __set_text(const std::string& val);
 
+  void __set_header(const std::string& val);
+
   bool operator == (const Tweet_ & rhs) const
   {
     if (!(tweet_id == rhs.tweet_id))
@@ -69,6 +73,8 @@ class Tweet_ : public virtual ::apache::thrift::TBase {
     if (!(file_id == rhs.file_id))
       return false;
     if (!(text == rhs.text))
+      return false;
+    if (!(header == rhs.header))
       return false;
     return true;
   }
@@ -89,10 +95,11 @@ void swap(Tweet_ &a, Tweet_ &b);
 std::ostream& operator<<(std::ostream& out, const Tweet_& obj);
 
 typedef struct _User___isset {
-  _User___isset() : user_id(false), username(false), homepage(false) {}
+  _User___isset() : user_id(false), username(false), homepage(false), header(false) {}
   bool user_id :1;
   bool username :1;
   bool homepage :1;
+  bool header :1;
 } _User___isset;
 
 class User_ : public virtual ::apache::thrift::TBase {
@@ -100,13 +107,14 @@ class User_ : public virtual ::apache::thrift::TBase {
 
   User_(const User_&);
   User_& operator=(const User_&);
-  User_() : user_id(), username(), homepage() {
+  User_() : user_id(), username(), homepage(), header() {
   }
 
   virtual ~User_() throw();
   std::string user_id;
   std::string username;
   std::string homepage;
+  std::string header;
 
   _User___isset __isset;
 
@@ -116,6 +124,8 @@ class User_ : public virtual ::apache::thrift::TBase {
 
   void __set_homepage(const std::string& val);
 
+  void __set_header(const std::string& val);
+
   bool operator == (const User_ & rhs) const
   {
     if (!(user_id == rhs.user_id))
@@ -123,6 +133,8 @@ class User_ : public virtual ::apache::thrift::TBase {
     if (!(username == rhs.username))
       return false;
     if (!(homepage == rhs.homepage))
+      return false;
+    if (!(header == rhs.header))
       return false;
     return true;
   }
@@ -143,9 +155,10 @@ void swap(User_ &a, User_ &b);
 std::ostream& operator<<(std::ostream& out, const User_& obj);
 
 typedef struct _File___isset {
-  _File___isset() : file_id(false), content(false) {}
+  _File___isset() : file_id(false), content(false), header(false) {}
   bool file_id :1;
   bool content :1;
+  bool header :1;
 } _File___isset;
 
 class File_ : public virtual ::apache::thrift::TBase {
@@ -153,12 +166,13 @@ class File_ : public virtual ::apache::thrift::TBase {
 
   File_(const File_&);
   File_& operator=(const File_&);
-  File_() : file_id(), content() {
+  File_() : file_id(), content(), header() {
   }
 
   virtual ~File_() throw();
   std::string file_id;
   std::string content;
+  std::string header;
 
   _File___isset __isset;
 
@@ -166,11 +180,15 @@ class File_ : public virtual ::apache::thrift::TBase {
 
   void __set_content(const std::string& val);
 
+  void __set_header(const std::string& val);
+
   bool operator == (const File_ & rhs) const
   {
     if (!(file_id == rhs.file_id))
       return false;
     if (!(content == rhs.content))
+      return false;
+    if (!(header == rhs.header))
       return false;
     return true;
   }
@@ -191,11 +209,12 @@ void swap(File_ &a, File_ &b);
 std::ostream& operator<<(std::ostream& out, const File_& obj);
 
 typedef struct _Tweet__isset {
-  _Tweet__isset() : tweet_id(false), user(false), text(false), file(false) {}
+  _Tweet__isset() : tweet_id(false), user(false), text(false), file(false), header(false) {}
   bool tweet_id :1;
   bool user :1;
   bool text :1;
   bool file :1;
+  bool header :1;
 } _Tweet__isset;
 
 class Tweet : public virtual ::apache::thrift::TBase {
@@ -203,7 +222,7 @@ class Tweet : public virtual ::apache::thrift::TBase {
 
   Tweet(const Tweet&);
   Tweet& operator=(const Tweet&);
-  Tweet() : tweet_id(), text() {
+  Tweet() : tweet_id(), text(), header() {
   }
 
   virtual ~Tweet() throw();
@@ -211,6 +230,7 @@ class Tweet : public virtual ::apache::thrift::TBase {
   User_ user;
   std::string text;
   File_ file;
+  std::string header;
 
   _Tweet__isset __isset;
 
@@ -222,6 +242,8 @@ class Tweet : public virtual ::apache::thrift::TBase {
 
   void __set_file(const File_& val);
 
+  void __set_header(const std::string& val);
+
   bool operator == (const Tweet & rhs) const
   {
     if (!(tweet_id == rhs.tweet_id))
@@ -231,6 +253,8 @@ class Tweet : public virtual ::apache::thrift::TBase {
     if (!(text == rhs.text))
       return false;
     if (!(file == rhs.file))
+      return false;
+    if (!(header == rhs.header))
       return false;
     return true;
   }

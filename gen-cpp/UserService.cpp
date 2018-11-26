@@ -42,6 +42,14 @@ uint32_t UserService_getUser__args::read(::apache::thrift::protocol::TProtocol* 
           xfer += iprot->skip(ftype);
         }
         break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->header);
+          this->__isset.header = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -63,6 +71,10 @@ uint32_t UserService_getUser__args::write(::apache::thrift::protocol::TProtocol*
   xfer += oprot->writeString(this->user_id);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("header", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->header);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -80,6 +92,10 @@ uint32_t UserService_getUser__pargs::write(::apache::thrift::protocol::TProtocol
 
   xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->user_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("header", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString((*(this->header)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -195,19 +211,20 @@ uint32_t UserService_getUser__presult::read(::apache::thrift::protocol::TProtoco
   return xfer;
 }
 
-void UserServiceClient::getUser_(User_& _return, const std::string& user_id)
+void UserServiceClient::getUser_(User_& _return, const std::string& user_id, const std::string& header)
 {
-  send_getUser_(user_id);
+  send_getUser_(user_id, header);
   recv_getUser_(_return);
 }
 
-void UserServiceClient::send_getUser_(const std::string& user_id)
+void UserServiceClient::send_getUser_(const std::string& user_id, const std::string& header)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("getUser_", ::apache::thrift::protocol::T_CALL, cseqid);
 
   UserService_getUser__pargs args;
   args.user_id = &user_id;
+  args.header = &header;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -295,7 +312,7 @@ void UserServiceProcessor::process_getUser_(int32_t seqid, ::apache::thrift::pro
 
   UserService_getUser__result result;
   try {
-    iface_->getUser_(result.success, args.user_id);
+    iface_->getUser_(result.success, args.user_id, args.header);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
@@ -333,13 +350,13 @@ void UserServiceProcessor::process_getUser_(int32_t seqid, ::apache::thrift::pro
   return processor;
 }
 
-void UserServiceConcurrentClient::getUser_(User_& _return, const std::string& user_id)
+void UserServiceConcurrentClient::getUser_(User_& _return, const std::string& user_id, const std::string& header)
 {
-  int32_t seqid = send_getUser_(user_id);
+  int32_t seqid = send_getUser_(user_id, header);
   recv_getUser_(_return, seqid);
 }
 
-int32_t UserServiceConcurrentClient::send_getUser_(const std::string& user_id)
+int32_t UserServiceConcurrentClient::send_getUser_(const std::string& user_id, const std::string& header)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
@@ -347,6 +364,7 @@ int32_t UserServiceConcurrentClient::send_getUser_(const std::string& user_id)
 
   UserService_getUser__pargs args;
   args.user_id = &user_id;
+  args.header = &header;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

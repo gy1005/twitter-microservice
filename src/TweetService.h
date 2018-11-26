@@ -24,7 +24,7 @@ public:
 
   ~TweetServiceHandler() override = default;
 
-  void getTweet_(Tweet_ &, const string &, const vector<Timestamp> &) override;
+  void getTweet_(Tweet_ &, const string &, const string &) override;
 
 private:
   string memcached_addr_;
@@ -45,9 +45,9 @@ TweetServiceHandler::TweetServiceHandler(
 }
 
 void TweetServiceHandler::getTweet_(Tweet_ &_return, const string &tweet_id,
-                                    const vector<Timestamp> &timestamps) {
-  vector<Timestamp> timestamps_return_ = timestamps;
-  append_timestamp("Tweet", "getTweet_start", timestamps_return_, nullptr);
+                                    const string &header) {
+  json _header_return_json = json::parse(header);
+  add_timestamp("Tweet", "getTweet_start", _header_return_json, nullptr);
   
   string memcached_config_str = "--SERVER=" + memcached_addr_ + ":"
                                 + to_string(memcached_port_);
@@ -67,7 +67,7 @@ void TweetServiceHandler::getTweet_(Tweet_ &_return, const string &tweet_id,
   uint32_t memcached_flags;
 
   // Find the user in the memcached
-  append_timestamp("Tweet", "get_start", timestamps_return_, nullptr);
+  add_timestamp("Tweet", "get_start", _header_return_json, nullptr);
   char *memcached_data = memcached_get(
       memcached_client,
       tweet_id.c_str(),
@@ -75,7 +75,7 @@ void TweetServiceHandler::getTweet_(Tweet_ &_return, const string &tweet_id,
       &memcached_data_size,
       &memcached_flags,
       &memcached_rc);
-  append_timestamp("Tweet", "get_end", timestamps_return_, nullptr);
+  add_timestamp("Tweet", "get_end", _header_return_json, nullptr);
 
   if (memcached_data) {
     // If the user is in memcached, return the data.
@@ -97,9 +97,9 @@ void TweetServiceHandler::getTweet_(Tweet_ &_return, const string &tweet_id,
         collection, query, nullptr, nullptr);
     const bson_t *doc;
 
-    append_timestamp("Tweet", "find_start", timestamps_return_, nullptr);
+    add_timestamp("Tweet", "find_start", _header_return_json, nullptr);
     bool if_found = mongoc_cursor_next(cursor, &doc);
-    append_timestamp("Tweet", "find_end", timestamps_return_, nullptr);
+    add_timestamp("Tweet", "find_end", _header_return_json, nullptr);
     
     if (if_found) {
       // If found in mongodb, set memcached and return
@@ -111,8 +111,8 @@ void TweetServiceHandler::getTweet_(Tweet_ &_return, const string &tweet_id,
       assert(_return.tweet_id == tweet_id);
 
       string doc_str = data_json.dump();
-      
-      append_timestamp("Tweet", "set_start", timestamps_return_, nullptr);
+
+      add_timestamp("Tweet", "set_start", _header_return_json, nullptr);
       memcached_rc = memcached_set(
           memcached_client,
           tweet_id.c_str(),
@@ -122,7 +122,7 @@ void TweetServiceHandler::getTweet_(Tweet_ &_return, const string &tweet_id,
           (time_t) 0,
           (uint32_t) 0
       );
-      append_timestamp("Tweet", "set_end", timestamps_return_, nullptr);
+      add_timestamp("Tweet", "set_end", _header_return_json, nullptr);
       
       if (memcached_rc != MEMCACHED_SUCCESS)
         cerr << "getTweet " << tweet_id << " " << memcached_strerror(memcached_client, memcached_rc)
@@ -132,8 +132,8 @@ void TweetServiceHandler::getTweet_(Tweet_ &_return, const string &tweet_id,
   }
   mongoc_client_destroy(mongodb_client);
   memcached_free(memcached_client);
-  append_timestamp("Tweet", "getTweet_end", timestamps_return_, nullptr);
-  _return.timestamps = timestamps_return_;
+  add_timestamp("Tweet", "getTweet_end", _header_return_json, nullptr);
+  _return.header = _header_return_json.dump(2);
 }
 
 #endif //TWITTER_MICROSERVICE_TWEETSERVICE_H

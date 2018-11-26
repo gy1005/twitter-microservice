@@ -50,6 +50,14 @@ uint32_t ComposeService_getTweet_args::read(::apache::thrift::protocol::TProtoco
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->header);
+          this->__isset.header = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -75,6 +83,10 @@ uint32_t ComposeService_getTweet_args::write(::apache::thrift::protocol::TProtoc
   xfer += oprot->writeString(this->tweet_id);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("header", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->header);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -96,6 +108,10 @@ uint32_t ComposeService_getTweet_pargs::write(::apache::thrift::protocol::TProto
 
   xfer += oprot->writeFieldBegin("tweet_id", ::apache::thrift::protocol::T_STRING, 2);
   xfer += oprot->writeString((*(this->tweet_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("header", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString((*(this->header)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -211,13 +227,13 @@ uint32_t ComposeService_getTweet_presult::read(::apache::thrift::protocol::TProt
   return xfer;
 }
 
-void ComposeServiceClient::getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id)
+void ComposeServiceClient::getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id, const std::string& header)
 {
-  send_getTweet(user_id, tweet_id);
+  send_getTweet(user_id, tweet_id, header);
   recv_getTweet(_return);
 }
 
-void ComposeServiceClient::send_getTweet(const std::string& user_id, const std::string& tweet_id)
+void ComposeServiceClient::send_getTweet(const std::string& user_id, const std::string& tweet_id, const std::string& header)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("getTweet", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -225,6 +241,7 @@ void ComposeServiceClient::send_getTweet(const std::string& user_id, const std::
   ComposeService_getTweet_pargs args;
   args.user_id = &user_id;
   args.tweet_id = &tweet_id;
+  args.header = &header;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -312,7 +329,7 @@ void ComposeServiceProcessor::process_getTweet(int32_t seqid, ::apache::thrift::
 
   ComposeService_getTweet_result result;
   try {
-    iface_->getTweet(result.success, args.user_id, args.tweet_id);
+    iface_->getTweet(result.success, args.user_id, args.tweet_id, args.header);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
@@ -350,13 +367,13 @@ void ComposeServiceProcessor::process_getTweet(int32_t seqid, ::apache::thrift::
   return processor;
 }
 
-void ComposeServiceConcurrentClient::getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id)
+void ComposeServiceConcurrentClient::getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id, const std::string& header)
 {
-  int32_t seqid = send_getTweet(user_id, tweet_id);
+  int32_t seqid = send_getTweet(user_id, tweet_id, header);
   recv_getTweet(_return, seqid);
 }
 
-int32_t ComposeServiceConcurrentClient::send_getTweet(const std::string& user_id, const std::string& tweet_id)
+int32_t ComposeServiceConcurrentClient::send_getTweet(const std::string& user_id, const std::string& tweet_id, const std::string& header)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
@@ -365,6 +382,7 @@ int32_t ComposeServiceConcurrentClient::send_getTweet(const std::string& user_id
   ComposeService_getTweet_pargs args;
   args.user_id = &user_id;
   args.tweet_id = &tweet_id;
+  args.header = &header;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();

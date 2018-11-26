@@ -19,10 +19,11 @@ all_structs = []
 
 
 class Iface(object):
-    def getTweet_(self, tweet_id):
+    def getTweet_(self, tweet_id, header):
         """
         Parameters:
          - tweet_id
+         - header
         """
         pass
 
@@ -34,18 +35,20 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def getTweet_(self, tweet_id):
+    def getTweet_(self, tweet_id, header):
         """
         Parameters:
          - tweet_id
+         - header
         """
-        self.send_getTweet_(tweet_id)
+        self.send_getTweet_(tweet_id, header)
         return self.recv_getTweet_()
 
-    def send_getTweet_(self, tweet_id):
+    def send_getTweet_(self, tweet_id, header):
         self._oprot.writeMessageBegin('getTweet_', TMessageType.CALL, self._seqid)
         args = getTweet__args()
         args.tweet_id = tweet_id
+        args.header = header
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -93,7 +96,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = getTweet__result()
         try:
-            result.success = self._handler.getTweet_(args.tweet_id)
+            result.success = self._handler.getTweet_(args.tweet_id, args.header)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -117,11 +120,13 @@ class getTweet__args(object):
     """
     Attributes:
      - tweet_id
+     - header
     """
 
 
-    def __init__(self, tweet_id=None,):
+    def __init__(self, tweet_id=None, header=None,):
         self.tweet_id = tweet_id
+        self.header = header
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -137,6 +142,11 @@ class getTweet__args(object):
                     self.tweet_id = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.header = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -150,6 +160,10 @@ class getTweet__args(object):
         if self.tweet_id is not None:
             oprot.writeFieldBegin('tweet_id', TType.STRING, 1)
             oprot.writeString(self.tweet_id.encode('utf-8') if sys.version_info[0] == 2 else self.tweet_id)
+            oprot.writeFieldEnd()
+        if self.header is not None:
+            oprot.writeFieldBegin('header', TType.STRING, 2)
+            oprot.writeString(self.header.encode('utf-8') if sys.version_info[0] == 2 else self.header)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -171,6 +185,7 @@ all_structs.append(getTweet__args)
 getTweet__args.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'tweet_id', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'header', 'UTF8', None, ),  # 2
 )
 
 

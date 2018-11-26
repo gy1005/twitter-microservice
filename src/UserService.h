@@ -34,7 +34,7 @@ public:
 //                     shared_ptr<ClientPool<MongodbClient>> &);
   ~UserServiceHandler() override = default;
 
-  void getUser_(User_ &, const string &, const vector<Timestamp> &) override;
+  void getUser_(User_ &, const string &, const string &) override;
 
 private:
 //  shared_ptr<ClientPool<MemcachedClient>> memcached_client_pool_;
@@ -64,9 +64,9 @@ UserServiceHandler::UserServiceHandler(
 
 
 void UserServiceHandler::getUser_(User_ &_return, const string &user_id,
-    const vector<Timestamp> &timestamps) {
-  vector<Timestamp> timestamps_return_ = timestamps;
-  append_timestamp("User", "getUser_start", timestamps_return_, nullptr);
+    const string &header) {
+  json _header_return_json = json::parse(header);
+  add_timestamp("User", "getUser_start", _header_return_json, nullptr);
 
   string memcached_config_str = "--SERVER=" + memcached_addr_ + ":"
                                 + to_string(memcached_port_);
@@ -88,7 +88,7 @@ void UserServiceHandler::getUser_(User_ &_return, const string &user_id,
   uint32_t memcached_flags;
 
   // Find the user in the memcached
-  append_timestamp("User", "get_start", timestamps_return_, nullptr);
+  add_timestamp("User", "get_start", _header_return_json, nullptr);
   char *memcached_data = memcached_get(
       memcached_client,
       user_id.c_str(),
@@ -96,7 +96,7 @@ void UserServiceHandler::getUser_(User_ &_return, const string &user_id,
       &memcached_data_size,
       &memcached_flags,
       &memcached_rc);
-  append_timestamp("User", "get_end", timestamps_return_, nullptr);
+  add_timestamp("User", "get_end", _header_return_json, nullptr);
 
   if (memcached_data) {
     // If the user is in memcached, return the data.
@@ -118,9 +118,9 @@ void UserServiceHandler::getUser_(User_ &_return, const string &user_id,
         collection, query, nullptr, nullptr);
     const bson_t *doc;
 
-    append_timestamp("User", "find_start", timestamps_return_, nullptr);
+    add_timestamp("User", "find_start", _header_return_json, nullptr);
     bool if_found = mongoc_cursor_next(cursor, &doc);
-    append_timestamp("User", "find_end", timestamps_return_, nullptr);
+    add_timestamp("User", "find_end", _header_return_json, nullptr);
 
     if (if_found) {
       // If found in mongodb, set memcached and return
@@ -132,7 +132,7 @@ void UserServiceHandler::getUser_(User_ &_return, const string &user_id,
 
       string doc_str = data_json.dump();
 
-      append_timestamp("User", "set_start", timestamps_return_, nullptr);
+      add_timestamp("User", "set_start", _header_return_json, nullptr);
       memcached_rc = memcached_set(
           memcached_client,
           user_id.c_str(),
@@ -142,18 +142,19 @@ void UserServiceHandler::getUser_(User_ &_return, const string &user_id,
           (time_t) 0,
           (uint32_t) 0
       );
-      append_timestamp("User", "set_end", timestamps_return_, nullptr);
+      add_timestamp("User", "set_end", _header_return_json, nullptr);
 
       if (memcached_rc != MEMCACHED_SUCCESS)
-        cerr << "getUser " <<user_id<<" "<< memcached_strerror(memcached_client, memcached_rc)
+        cerr << "getUser " <<user_id<<" "
+             << memcached_strerror(memcached_client, memcached_rc)
              << endl;
     }
     mongoc_collection_destroy(collection);
   }
   mongoc_client_destroy(mongodb_client);
   memcached_free(memcached_client);
-  append_timestamp("User", "getUser_end", timestamps_return_, nullptr);
-  _return.timestamps = timestamps_return_;
+  add_timestamp("User", "getUser_end", _header_return_json, nullptr);
+  _return.header = _header_return_json.dump(2);
 }
 
 

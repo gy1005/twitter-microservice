@@ -9,28 +9,27 @@
 require 'Thrift'
 require 'twitter_ttypes'
 
-local ComposeServiceClient = {}
-
 ComposeServiceClient = __TObject.new(__TClient, {
   __type = 'ComposeServiceClient'
 })
 
-function ComposeServiceClient:getTweet(user_id, tweet_id)
-  self:send_getTweet(user_id, tweet_id)
-  return self:recv_getTweet(user_id, tweet_id)
+function ComposeServiceClient:getTweet(user_id, tweet_id, header)
+  self:send_getTweet(user_id, tweet_id, header)
+  return self:recv_getTweet(user_id, tweet_id, header)
 end
 
-function ComposeServiceClient:send_getTweet(user_id, tweet_id)
+function ComposeServiceClient:send_getTweet(user_id, tweet_id, header)
   self.oprot:writeMessageBegin('getTweet', TMessageType.CALL, self._seqid)
   local args = getTweet_args:new{}
   args.user_id = user_id
   args.tweet_id = tweet_id
+  args.header = header
   args:write(self.oprot)
   self.oprot:writeMessageEnd()
   self.oprot.trans:flush()
 end
 
-function ComposeServiceClient:recv_getTweet(user_id, tweet_id)
+function ComposeServiceClient:recv_getTweet(user_id, tweet_id, header)
   local fname, mtype, rseqid = self.iprot:readMessageBegin()
   if mtype == TMessageType.EXCEPTION then
     local x = TApplicationException:new{}
@@ -80,7 +79,7 @@ function ComposeServiceProcessor:process_getTweet(seqid, iprot, oprot, server_ct
   args:read(iprot)
   iprot:readMessageEnd()
   local result = getTweet_result:new{}
-  local status, res = pcall(self.handler.getTweet, self.handler, args.user_id, args.tweet_id)
+  local status, res = pcall(self.handler.getTweet, self.handler, args.user_id, args.tweet_id, args.header)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
@@ -97,7 +96,8 @@ end
 
 getTweet_args = __TObject:new{
   user_id,
-  tweet_id
+  tweet_id,
+  header
 }
 
 function getTweet_args:read(iprot)
@@ -115,6 +115,12 @@ function getTweet_args:read(iprot)
     elseif fid == 2 then
       if ftype == TType.STRING then
         self.tweet_id = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 3 then
+      if ftype == TType.STRING then
+        self.header = iprot:readString()
       else
         iprot:skip(ftype)
       end
@@ -136,6 +142,11 @@ function getTweet_args:write(oprot)
   if self.tweet_id ~= nil then
     oprot:writeFieldBegin('tweet_id', TType.STRING, 2)
     oprot:writeString(self.tweet_id)
+    oprot:writeFieldEnd()
+  end
+  if self.header ~= nil then
+    oprot:writeFieldBegin('header', TType.STRING, 3)
+    oprot:writeString(self.header)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
@@ -177,5 +188,3 @@ function getTweet_result:write(oprot)
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
-
-return ComposeServiceClient

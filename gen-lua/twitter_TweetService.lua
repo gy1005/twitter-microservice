@@ -13,21 +13,22 @@ TweetServiceClient = __TObject.new(__TClient, {
   __type = 'TweetServiceClient'
 })
 
-function TweetServiceClient:getTweet_(tweet_id)
-  self:send_getTweet_(tweet_id)
-  return self:recv_getTweet_(tweet_id)
+function TweetServiceClient:getTweet_(tweet_id, header)
+  self:send_getTweet_(tweet_id, header)
+  return self:recv_getTweet_(tweet_id, header)
 end
 
-function TweetServiceClient:send_getTweet_(tweet_id)
+function TweetServiceClient:send_getTweet_(tweet_id, header)
   self.oprot:writeMessageBegin('getTweet_', TMessageType.CALL, self._seqid)
   local args = getTweet__args:new{}
   args.tweet_id = tweet_id
+  args.header = header
   args:write(self.oprot)
   self.oprot:writeMessageEnd()
   self.oprot.trans:flush()
 end
 
-function TweetServiceClient:recv_getTweet_(tweet_id)
+function TweetServiceClient:recv_getTweet_(tweet_id, header)
   local fname, mtype, rseqid = self.iprot:readMessageBegin()
   if mtype == TMessageType.EXCEPTION then
     local x = TApplicationException:new{}
@@ -77,7 +78,7 @@ function TweetServiceProcessor:process_getTweet_(seqid, iprot, oprot, server_ctx
   args:read(iprot)
   iprot:readMessageEnd()
   local result = getTweet__result:new{}
-  local status, res = pcall(self.handler.getTweet_, self.handler, args.tweet_id)
+  local status, res = pcall(self.handler.getTweet_, self.handler, args.tweet_id, args.header)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
@@ -93,7 +94,8 @@ end
 -- HELPER FUNCTIONS AND STRUCTURES
 
 getTweet__args = __TObject:new{
-  tweet_id
+  tweet_id,
+  header
 }
 
 function getTweet__args:read(iprot)
@@ -105,6 +107,12 @@ function getTweet__args:read(iprot)
     elseif fid == 1 then
       if ftype == TType.STRING then
         self.tweet_id = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRING then
+        self.header = iprot:readString()
       else
         iprot:skip(ftype)
       end
@@ -121,6 +129,11 @@ function getTweet__args:write(oprot)
   if self.tweet_id ~= nil then
     oprot:writeFieldBegin('tweet_id', TType.STRING, 1)
     oprot:writeString(self.tweet_id)
+    oprot:writeFieldEnd()
+  end
+  if self.header ~= nil then
+    oprot:writeFieldBegin('header', TType.STRING, 2)
+    oprot:writeString(self.header)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()

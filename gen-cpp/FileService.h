@@ -21,7 +21,7 @@ namespace twitter {
 class FileServiceIf {
  public:
   virtual ~FileServiceIf() {}
-  virtual void getFile_(File_& _return, const std::string& file_id) = 0;
+  virtual void getFile_(File_& _return, const std::string& file_id, const std::string& header) = 0;
 };
 
 class FileServiceIfFactory {
@@ -51,14 +51,15 @@ class FileServiceIfSingletonFactory : virtual public FileServiceIfFactory {
 class FileServiceNull : virtual public FileServiceIf {
  public:
   virtual ~FileServiceNull() {}
-  void getFile_(File_& /* _return */, const std::string& /* file_id */) {
+  void getFile_(File_& /* _return */, const std::string& /* file_id */, const std::string& /* header */) {
     return;
   }
 };
 
 typedef struct _FileService_getFile__args__isset {
-  _FileService_getFile__args__isset() : file_id(false) {}
+  _FileService_getFile__args__isset() : file_id(false), header(false) {}
   bool file_id :1;
+  bool header :1;
 } _FileService_getFile__args__isset;
 
 class FileService_getFile__args {
@@ -66,19 +67,24 @@ class FileService_getFile__args {
 
   FileService_getFile__args(const FileService_getFile__args&);
   FileService_getFile__args& operator=(const FileService_getFile__args&);
-  FileService_getFile__args() : file_id() {
+  FileService_getFile__args() : file_id(), header() {
   }
 
   virtual ~FileService_getFile__args() throw();
   std::string file_id;
+  std::string header;
 
   _FileService_getFile__args__isset __isset;
 
   void __set_file_id(const std::string& val);
 
+  void __set_header(const std::string& val);
+
   bool operator == (const FileService_getFile__args & rhs) const
   {
     if (!(file_id == rhs.file_id))
+      return false;
+    if (!(header == rhs.header))
       return false;
     return true;
   }
@@ -100,6 +106,7 @@ class FileService_getFile__pargs {
 
   virtual ~FileService_getFile__pargs() throw();
   const std::string* file_id;
+  const std::string* header;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -185,8 +192,8 @@ class FileServiceClient : virtual public FileServiceIf {
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void getFile_(File_& _return, const std::string& file_id);
-  void send_getFile_(const std::string& file_id);
+  void getFile_(File_& _return, const std::string& file_id, const std::string& header);
+  void send_getFile_(const std::string& file_id, const std::string& header);
   void recv_getFile_(File_& _return);
  protected:
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
@@ -236,13 +243,13 @@ class FileServiceMultiface : virtual public FileServiceIf {
     ifaces_.push_back(iface);
   }
  public:
-  void getFile_(File_& _return, const std::string& file_id) {
+  void getFile_(File_& _return, const std::string& file_id, const std::string& header) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->getFile_(_return, file_id);
+      ifaces_[i]->getFile_(_return, file_id, header);
     }
-    ifaces_[i]->getFile_(_return, file_id);
+    ifaces_[i]->getFile_(_return, file_id, header);
     return;
   }
 
@@ -276,8 +283,8 @@ class FileServiceConcurrentClient : virtual public FileServiceIf {
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void getFile_(File_& _return, const std::string& file_id);
-  int32_t send_getFile_(const std::string& file_id);
+  void getFile_(File_& _return, const std::string& file_id, const std::string& header);
+  int32_t send_getFile_(const std::string& file_id, const std::string& header);
   void recv_getFile_(File_& _return, const int32_t seqid);
  protected:
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;

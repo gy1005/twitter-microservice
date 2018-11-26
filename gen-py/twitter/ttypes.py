@@ -23,14 +23,16 @@ class Tweet_(object):
      - user_id
      - file_id
      - text
+     - header
     """
 
 
-    def __init__(self, tweet_id=None, user_id=None, file_id=None, text=None,):
+    def __init__(self, tweet_id=None, user_id=None, file_id=None, text=None, header=None,):
         self.tweet_id = tweet_id
         self.user_id = user_id
         self.file_id = file_id
         self.text = text
+        self.header = header
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -61,6 +63,11 @@ class Tweet_(object):
                     self.text = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.header = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -87,6 +94,10 @@ class Tweet_(object):
             oprot.writeFieldBegin('text', TType.STRING, 4)
             oprot.writeString(self.text.encode('utf-8') if sys.version_info[0] == 2 else self.text)
             oprot.writeFieldEnd()
+        if self.header is not None:
+            oprot.writeFieldBegin('header', TType.STRING, 5)
+            oprot.writeString(self.header.encode('utf-8') if sys.version_info[0] == 2 else self.header)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -111,13 +122,15 @@ class User_(object):
      - user_id
      - username
      - homepage
+     - header
     """
 
 
-    def __init__(self, user_id=None, username=None, homepage=None,):
+    def __init__(self, user_id=None, username=None, homepage=None, header=None,):
         self.user_id = user_id
         self.username = username
         self.homepage = homepage
+        self.header = header
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -143,6 +156,11 @@ class User_(object):
                     self.homepage = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.header = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -164,6 +182,10 @@ class User_(object):
         if self.homepage is not None:
             oprot.writeFieldBegin('homepage', TType.STRING, 3)
             oprot.writeString(self.homepage.encode('utf-8') if sys.version_info[0] == 2 else self.homepage)
+            oprot.writeFieldEnd()
+        if self.header is not None:
+            oprot.writeFieldBegin('header', TType.STRING, 4)
+            oprot.writeString(self.header.encode('utf-8') if sys.version_info[0] == 2 else self.header)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -188,12 +210,14 @@ class File_(object):
     Attributes:
      - file_id
      - content
+     - header
     """
 
 
-    def __init__(self, file_id=None, content=None,):
+    def __init__(self, file_id=None, content=None, header=None,):
         self.file_id = file_id
         self.content = content
+        self.header = header
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -214,6 +238,11 @@ class File_(object):
                     self.content = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.STRING:
+                    self.header = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -231,6 +260,10 @@ class File_(object):
         if self.content is not None:
             oprot.writeFieldBegin('content', TType.STRING, 2)
             oprot.writeString(self.content.encode('utf-8') if sys.version_info[0] == 2 else self.content)
+            oprot.writeFieldEnd()
+        if self.header is not None:
+            oprot.writeFieldBegin('header', TType.STRING, 3)
+            oprot.writeString(self.header.encode('utf-8') if sys.version_info[0] == 2 else self.header)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -257,14 +290,16 @@ class Tweet(object):
      - user
      - text
      - file
+     - header
     """
 
 
-    def __init__(self, tweet_id=None, user=None, text=None, file=None,):
+    def __init__(self, tweet_id=None, user=None, text=None, file=None, header=None,):
         self.tweet_id = tweet_id
         self.user = user
         self.text = text
         self.file = file
+        self.header = header
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -297,6 +332,11 @@ class Tweet(object):
                     self.file.read(iprot)
                 else:
                     iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.header = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -323,6 +363,10 @@ class Tweet(object):
             oprot.writeFieldBegin('file', TType.STRUCT, 4)
             self.file.write(oprot)
             oprot.writeFieldEnd()
+        if self.header is not None:
+            oprot.writeFieldBegin('header', TType.STRING, 5)
+            oprot.writeString(self.header.encode('utf-8') if sys.version_info[0] == 2 else self.header)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -346,6 +390,7 @@ Tweet_.thrift_spec = (
     (2, TType.STRING, 'user_id', 'UTF8', None, ),  # 2
     (3, TType.STRING, 'file_id', 'UTF8', None, ),  # 3
     (4, TType.STRING, 'text', 'UTF8', None, ),  # 4
+    (5, TType.STRING, 'header', 'UTF8', None, ),  # 5
 )
 all_structs.append(User_)
 User_.thrift_spec = (
@@ -353,12 +398,14 @@ User_.thrift_spec = (
     (1, TType.STRING, 'user_id', 'UTF8', None, ),  # 1
     (2, TType.STRING, 'username', 'UTF8', None, ),  # 2
     (3, TType.STRING, 'homepage', 'UTF8', None, ),  # 3
+    (4, TType.STRING, 'header', 'UTF8', None, ),  # 4
 )
 all_structs.append(File_)
 File_.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'file_id', 'UTF8', None, ),  # 1
     (2, TType.STRING, 'content', 'UTF8', None, ),  # 2
+    (3, TType.STRING, 'header', 'UTF8', None, ),  # 3
 )
 all_structs.append(Tweet)
 Tweet.thrift_spec = (
@@ -367,6 +414,7 @@ Tweet.thrift_spec = (
     (2, TType.STRUCT, 'user', [User_, None], None, ),  # 2
     (3, TType.STRING, 'text', 'UTF8', None, ),  # 3
     (4, TType.STRUCT, 'file', [File_, None], None, ),  # 4
+    (5, TType.STRING, 'header', 'UTF8', None, ),  # 5
 )
 fix_spec(all_structs)
 del all_structs

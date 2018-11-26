@@ -33,6 +33,10 @@ void Tweet_::__set_file_id(const std::string& val) {
 void Tweet_::__set_text(const std::string& val) {
   this->text = val;
 }
+
+void Tweet_::__set_header(const std::string& val) {
+  this->header = val;
+}
 std::ostream& operator<<(std::ostream& out, const Tweet_& obj)
 {
   obj.printTo(out);
@@ -93,6 +97,14 @@ uint32_t Tweet_::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->header);
+          this->__isset.header = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -126,6 +138,10 @@ uint32_t Tweet_::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->text);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("header", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->header);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -137,6 +153,7 @@ void swap(Tweet_ &a, Tweet_ &b) {
   swap(a.user_id, b.user_id);
   swap(a.file_id, b.file_id);
   swap(a.text, b.text);
+  swap(a.header, b.header);
   swap(a.__isset, b.__isset);
 }
 
@@ -145,6 +162,7 @@ Tweet_::Tweet_(const Tweet_& other0) {
   user_id = other0.user_id;
   file_id = other0.file_id;
   text = other0.text;
+  header = other0.header;
   __isset = other0.__isset;
 }
 Tweet_& Tweet_::operator=(const Tweet_& other1) {
@@ -152,6 +170,7 @@ Tweet_& Tweet_::operator=(const Tweet_& other1) {
   user_id = other1.user_id;
   file_id = other1.file_id;
   text = other1.text;
+  header = other1.header;
   __isset = other1.__isset;
   return *this;
 }
@@ -162,6 +181,7 @@ void Tweet_::printTo(std::ostream& out) const {
   out << ", " << "user_id=" << to_string(user_id);
   out << ", " << "file_id=" << to_string(file_id);
   out << ", " << "text=" << to_string(text);
+  out << ", " << "header=" << to_string(header);
   out << ")";
 }
 
@@ -180,6 +200,10 @@ void User_::__set_username(const std::string& val) {
 
 void User_::__set_homepage(const std::string& val) {
   this->homepage = val;
+}
+
+void User_::__set_header(const std::string& val) {
+  this->header = val;
 }
 std::ostream& operator<<(std::ostream& out, const User_& obj)
 {
@@ -233,6 +257,14 @@ uint32_t User_::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->header);
+          this->__isset.header = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -262,6 +294,10 @@ uint32_t User_::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->homepage);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("header", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->header);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -272,6 +308,7 @@ void swap(User_ &a, User_ &b) {
   swap(a.user_id, b.user_id);
   swap(a.username, b.username);
   swap(a.homepage, b.homepage);
+  swap(a.header, b.header);
   swap(a.__isset, b.__isset);
 }
 
@@ -279,12 +316,14 @@ User_::User_(const User_& other2) {
   user_id = other2.user_id;
   username = other2.username;
   homepage = other2.homepage;
+  header = other2.header;
   __isset = other2.__isset;
 }
 User_& User_::operator=(const User_& other3) {
   user_id = other3.user_id;
   username = other3.username;
   homepage = other3.homepage;
+  header = other3.header;
   __isset = other3.__isset;
   return *this;
 }
@@ -294,6 +333,7 @@ void User_::printTo(std::ostream& out) const {
   out << "user_id=" << to_string(user_id);
   out << ", " << "username=" << to_string(username);
   out << ", " << "homepage=" << to_string(homepage);
+  out << ", " << "header=" << to_string(header);
   out << ")";
 }
 
@@ -308,6 +348,10 @@ void File_::__set_file_id(const std::string& val) {
 
 void File_::__set_content(const std::string& val) {
   this->content = val;
+}
+
+void File_::__set_header(const std::string& val) {
+  this->header = val;
 }
 std::ostream& operator<<(std::ostream& out, const File_& obj)
 {
@@ -353,6 +397,14 @@ uint32_t File_::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 3:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->header);
+          this->__isset.header = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -378,6 +430,10 @@ uint32_t File_::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->content);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("header", ::apache::thrift::protocol::T_STRING, 3);
+  xfer += oprot->writeString(this->header);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -387,17 +443,20 @@ void swap(File_ &a, File_ &b) {
   using ::std::swap;
   swap(a.file_id, b.file_id);
   swap(a.content, b.content);
+  swap(a.header, b.header);
   swap(a.__isset, b.__isset);
 }
 
 File_::File_(const File_& other4) {
   file_id = other4.file_id;
   content = other4.content;
+  header = other4.header;
   __isset = other4.__isset;
 }
 File_& File_::operator=(const File_& other5) {
   file_id = other5.file_id;
   content = other5.content;
+  header = other5.header;
   __isset = other5.__isset;
   return *this;
 }
@@ -406,6 +465,7 @@ void File_::printTo(std::ostream& out) const {
   out << "File_(";
   out << "file_id=" << to_string(file_id);
   out << ", " << "content=" << to_string(content);
+  out << ", " << "header=" << to_string(header);
   out << ")";
 }
 
@@ -428,6 +488,10 @@ void Tweet::__set_text(const std::string& val) {
 
 void Tweet::__set_file(const File_& val) {
   this->file = val;
+}
+
+void Tweet::__set_header(const std::string& val) {
+  this->header = val;
 }
 std::ostream& operator<<(std::ostream& out, const Tweet& obj)
 {
@@ -489,6 +553,14 @@ uint32_t Tweet::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->header);
+          this->__isset.header = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -522,6 +594,10 @@ uint32_t Tweet::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += this->file.write(oprot);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("header", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->header);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -533,6 +609,7 @@ void swap(Tweet &a, Tweet &b) {
   swap(a.user, b.user);
   swap(a.text, b.text);
   swap(a.file, b.file);
+  swap(a.header, b.header);
   swap(a.__isset, b.__isset);
 }
 
@@ -541,6 +618,7 @@ Tweet::Tweet(const Tweet& other6) {
   user = other6.user;
   text = other6.text;
   file = other6.file;
+  header = other6.header;
   __isset = other6.__isset;
 }
 Tweet& Tweet::operator=(const Tweet& other7) {
@@ -548,6 +626,7 @@ Tweet& Tweet::operator=(const Tweet& other7) {
   user = other7.user;
   text = other7.text;
   file = other7.file;
+  header = other7.header;
   __isset = other7.__isset;
   return *this;
 }
@@ -558,6 +637,7 @@ void Tweet::printTo(std::ostream& out) const {
   out << ", " << "user=" << to_string(user);
   out << ", " << "text=" << to_string(text);
   out << ", " << "file=" << to_string(file);
+  out << ", " << "header=" << to_string(header);
   out << ")";
 }
 

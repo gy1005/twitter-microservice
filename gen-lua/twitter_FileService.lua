@@ -13,21 +13,22 @@ FileServiceClient = __TObject.new(__TClient, {
   __type = 'FileServiceClient'
 })
 
-function FileServiceClient:getFile_(file_id)
-  self:send_getFile_(file_id)
-  return self:recv_getFile_(file_id)
+function FileServiceClient:getFile_(file_id, header)
+  self:send_getFile_(file_id, header)
+  return self:recv_getFile_(file_id, header)
 end
 
-function FileServiceClient:send_getFile_(file_id)
+function FileServiceClient:send_getFile_(file_id, header)
   self.oprot:writeMessageBegin('getFile_', TMessageType.CALL, self._seqid)
   local args = getFile__args:new{}
   args.file_id = file_id
+  args.header = header
   args:write(self.oprot)
   self.oprot:writeMessageEnd()
   self.oprot.trans:flush()
 end
 
-function FileServiceClient:recv_getFile_(file_id)
+function FileServiceClient:recv_getFile_(file_id, header)
   local fname, mtype, rseqid = self.iprot:readMessageBegin()
   if mtype == TMessageType.EXCEPTION then
     local x = TApplicationException:new{}
@@ -77,7 +78,7 @@ function FileServiceProcessor:process_getFile_(seqid, iprot, oprot, server_ctx)
   args:read(iprot)
   iprot:readMessageEnd()
   local result = getFile__result:new{}
-  local status, res = pcall(self.handler.getFile_, self.handler, args.file_id)
+  local status, res = pcall(self.handler.getFile_, self.handler, args.file_id, args.header)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
@@ -93,7 +94,8 @@ end
 -- HELPER FUNCTIONS AND STRUCTURES
 
 getFile__args = __TObject:new{
-  file_id
+  file_id,
+  header
 }
 
 function getFile__args:read(iprot)
@@ -105,6 +107,12 @@ function getFile__args:read(iprot)
     elseif fid == 1 then
       if ftype == TType.STRING then
         self.file_id = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.STRING then
+        self.header = iprot:readString()
       else
         iprot:skip(ftype)
       end
@@ -121,6 +129,11 @@ function getFile__args:write(oprot)
   if self.file_id ~= nil then
     oprot:writeFieldBegin('file_id', TType.STRING, 1)
     oprot:writeString(self.file_id)
+    oprot:writeFieldEnd()
+  end
+  if self.header ~= nil then
+    oprot:writeFieldBegin('header', TType.STRING, 2)
+    oprot:writeString(self.header)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()

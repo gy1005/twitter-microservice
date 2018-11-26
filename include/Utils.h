@@ -13,7 +13,6 @@
 #include <chrono>
 #include <nlohmann/json.hpp>
 #include "../gen-cpp/twitter_types.h"
-#include "../hdr_histogram/hdr_histogram.h"
 
 
 using json = nlohmann::json;
@@ -35,17 +34,12 @@ void add_timestamp(const string &service_name, const string &func_name,
     json &header, mutex *mtx) {
   long now_us = duration_cast<microseconds>(
       system_clock::now().time_since_epoch()).count();
-  
-  Timestamp timestamp;
-  timestamp.service_name = service_name;
-  timestamp.function_name = func_name;
-  timestamp.timestamp = now_us;
   if (mtx) {
     mtx->lock();
-    timestamps.emplace_back(timestamp);
+    header[service_name][func_name] = now_us;
     mtx->unlock();
   } else {
-    timestamps.emplace_back(timestamp);
+    header[service_name][func_name] = now_us;
   }
 }
 

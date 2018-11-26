@@ -2,10 +2,11 @@ cmake_minimum_required(VERSION 3.9)
 
 include("cmake/HunterGate.cmake")
 HunterGate(
-        URL "https://github.com/ruslo/hunter/archive/v0.23.28.tar.gz"
-        SHA1 "6c79b36253a8e8bcba48927e9f3be65a3a81e6ec"
+        URL "https://github.com/ruslo/hunter/archive/v0.23.58.tar.gz"
+        SHA1 "ee80dc91f91f5eb6892f80a0a92c83b4de8e980a"
         LOCAL
 )
+
 
 project(twitter_microservice)
 set(CMAKE_CXX_STANDARD 17)

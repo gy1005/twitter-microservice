@@ -19,7 +19,7 @@ using namespace apache::thrift::transport;
 using namespace apache::thrift::server;
 
 template<class TThriftClient>
-int testConnect(const string &addr, int port) noexcept(false) {
+void testConnect(const string &addr, int port) noexcept(false) {
   stdcxx::shared_ptr<TTransport> socket(new TSocket(addr, port));
   stdcxx::shared_ptr<TTransport> transport;
 

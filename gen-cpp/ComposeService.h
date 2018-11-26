@@ -21,7 +21,7 @@ namespace twitter {
 class ComposeServiceIf {
  public:
   virtual ~ComposeServiceIf() {}
-  virtual void getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id) = 0;
+  virtual void getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id, const std::string& header) = 0;
 };
 
 class ComposeServiceIfFactory {
@@ -51,15 +51,16 @@ class ComposeServiceIfSingletonFactory : virtual public ComposeServiceIfFactory 
 class ComposeServiceNull : virtual public ComposeServiceIf {
  public:
   virtual ~ComposeServiceNull() {}
-  void getTweet(Tweet& /* _return */, const std::string& /* user_id */, const std::string& /* tweet_id */) {
+  void getTweet(Tweet& /* _return */, const std::string& /* user_id */, const std::string& /* tweet_id */, const std::string& /* header */) {
     return;
   }
 };
 
 typedef struct _ComposeService_getTweet_args__isset {
-  _ComposeService_getTweet_args__isset() : user_id(false), tweet_id(false) {}
+  _ComposeService_getTweet_args__isset() : user_id(false), tweet_id(false), header(false) {}
   bool user_id :1;
   bool tweet_id :1;
+  bool header :1;
 } _ComposeService_getTweet_args__isset;
 
 class ComposeService_getTweet_args {
@@ -67,12 +68,13 @@ class ComposeService_getTweet_args {
 
   ComposeService_getTweet_args(const ComposeService_getTweet_args&);
   ComposeService_getTweet_args& operator=(const ComposeService_getTweet_args&);
-  ComposeService_getTweet_args() : user_id(), tweet_id() {
+  ComposeService_getTweet_args() : user_id(), tweet_id(), header() {
   }
 
   virtual ~ComposeService_getTweet_args() throw();
   std::string user_id;
   std::string tweet_id;
+  std::string header;
 
   _ComposeService_getTweet_args__isset __isset;
 
@@ -80,11 +82,15 @@ class ComposeService_getTweet_args {
 
   void __set_tweet_id(const std::string& val);
 
+  void __set_header(const std::string& val);
+
   bool operator == (const ComposeService_getTweet_args & rhs) const
   {
     if (!(user_id == rhs.user_id))
       return false;
     if (!(tweet_id == rhs.tweet_id))
+      return false;
+    if (!(header == rhs.header))
       return false;
     return true;
   }
@@ -107,6 +113,7 @@ class ComposeService_getTweet_pargs {
   virtual ~ComposeService_getTweet_pargs() throw();
   const std::string* user_id;
   const std::string* tweet_id;
+  const std::string* header;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -192,8 +199,8 @@ class ComposeServiceClient : virtual public ComposeServiceIf {
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id);
-  void send_getTweet(const std::string& user_id, const std::string& tweet_id);
+  void getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id, const std::string& header);
+  void send_getTweet(const std::string& user_id, const std::string& tweet_id, const std::string& header);
   void recv_getTweet(Tweet& _return);
  protected:
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
@@ -243,13 +250,13 @@ class ComposeServiceMultiface : virtual public ComposeServiceIf {
     ifaces_.push_back(iface);
   }
  public:
-  void getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id) {
+  void getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id, const std::string& header) {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->getTweet(_return, user_id, tweet_id);
+      ifaces_[i]->getTweet(_return, user_id, tweet_id, header);
     }
-    ifaces_[i]->getTweet(_return, user_id, tweet_id);
+    ifaces_[i]->getTweet(_return, user_id, tweet_id, header);
     return;
   }
 
@@ -283,8 +290,8 @@ class ComposeServiceConcurrentClient : virtual public ComposeServiceIf {
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> getOutputProtocol() {
     return poprot_;
   }
-  void getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id);
-  int32_t send_getTweet(const std::string& user_id, const std::string& tweet_id);
+  void getTweet(Tweet& _return, const std::string& user_id, const std::string& tweet_id, const std::string& header);
+  int32_t send_getTweet(const std::string& user_id, const std::string& tweet_id, const std::string& header);
   void recv_getTweet(Tweet& _return, const int32_t seqid);
  protected:
   apache::thrift::stdcxx::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;

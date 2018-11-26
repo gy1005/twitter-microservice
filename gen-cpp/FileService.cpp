@@ -42,6 +42,14 @@ uint32_t FileService_getFile__args::read(::apache::thrift::protocol::TProtocol* 
           xfer += iprot->skip(ftype);
         }
         break;
+      case 2:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->header);
+          this->__isset.header = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -63,6 +71,10 @@ uint32_t FileService_getFile__args::write(::apache::thrift::protocol::TProtocol*
   xfer += oprot->writeString(this->file_id);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("header", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString(this->header);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -80,6 +92,10 @@ uint32_t FileService_getFile__pargs::write(::apache::thrift::protocol::TProtocol
 
   xfer += oprot->writeFieldBegin("file_id", ::apache::thrift::protocol::T_STRING, 1);
   xfer += oprot->writeString((*(this->file_id)));
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("header", ::apache::thrift::protocol::T_STRING, 2);
+  xfer += oprot->writeString((*(this->header)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -195,19 +211,20 @@ uint32_t FileService_getFile__presult::read(::apache::thrift::protocol::TProtoco
   return xfer;
 }
 
-void FileServiceClient::getFile_(File_& _return, const std::string& file_id)
+void FileServiceClient::getFile_(File_& _return, const std::string& file_id, const std::string& header)
 {
-  send_getFile_(file_id);
+  send_getFile_(file_id, header);
   recv_getFile_(_return);
 }
 
-void FileServiceClient::send_getFile_(const std::string& file_id)
+void FileServiceClient::send_getFile_(const std::string& file_id, const std::string& header)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("getFile_", ::apache::thrift::protocol::T_CALL, cseqid);
 
   FileService_getFile__pargs args;
   args.file_id = &file_id;
+  args.header = &header;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -295,7 +312,7 @@ void FileServiceProcessor::process_getFile_(int32_t seqid, ::apache::thrift::pro
 
   FileService_getFile__result result;
   try {
-    iface_->getFile_(result.success, args.file_id);
+    iface_->getFile_(result.success, args.file_id, args.header);
     result.__isset.success = true;
   } catch (const std::exception& e) {
     if (this->eventHandler_.get() != NULL) {
@@ -333,13 +350,13 @@ void FileServiceProcessor::process_getFile_(int32_t seqid, ::apache::thrift::pro
   return processor;
 }
 
-void FileServiceConcurrentClient::getFile_(File_& _return, const std::string& file_id)
+void FileServiceConcurrentClient::getFile_(File_& _return, const std::string& file_id, const std::string& header)
 {
-  int32_t seqid = send_getFile_(file_id);
+  int32_t seqid = send_getFile_(file_id, header);
   recv_getFile_(_return, seqid);
 }
 
-int32_t FileServiceConcurrentClient::send_getFile_(const std::string& file_id)
+int32_t FileServiceConcurrentClient::send_getFile_(const std::string& file_id, const std::string& header)
 {
   int32_t cseqid = this->sync_.generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(&this->sync_);
@@ -347,6 +364,7 @@ int32_t FileServiceConcurrentClient::send_getFile_(const std::string& file_id)
 
   FileService_getFile__pargs args;
   args.file_id = &file_id;
+  args.header = &header;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
