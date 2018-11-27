@@ -13,7 +13,8 @@ Tweet_ = __TObject:new{
   tweet_id,
   user_id,
   file_id,
-  text
+  text,
+  header
 }
 
 function Tweet_:read(iprot)
@@ -43,6 +44,12 @@ function Tweet_:read(iprot)
     elseif fid == 4 then
       if ftype == TType.STRING then
         self.text = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 5 then
+      if ftype == TType.STRING then
+        self.header = iprot:readString()
       else
         iprot:skip(ftype)
       end
@@ -76,6 +83,11 @@ function Tweet_:write(oprot)
     oprot:writeString(self.text)
     oprot:writeFieldEnd()
   end
+  if self.header ~= nil then
+    oprot:writeFieldBegin('header', TType.STRING, 5)
+    oprot:writeString(self.header)
+    oprot:writeFieldEnd()
+  end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
@@ -83,7 +95,8 @@ end
 User_ = __TObject:new{
   user_id,
   username,
-  homepage
+  homepage,
+  header
 }
 
 function User_:read(iprot)
@@ -107,6 +120,12 @@ function User_:read(iprot)
     elseif fid == 3 then
       if ftype == TType.STRING then
         self.homepage = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 4 then
+      if ftype == TType.STRING then
+        self.header = iprot:readString()
       else
         iprot:skip(ftype)
       end
@@ -135,13 +154,19 @@ function User_:write(oprot)
     oprot:writeString(self.homepage)
     oprot:writeFieldEnd()
   end
+  if self.header ~= nil then
+    oprot:writeFieldBegin('header', TType.STRING, 4)
+    oprot:writeString(self.header)
+    oprot:writeFieldEnd()
+  end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
 
 File_ = __TObject:new{
   file_id,
-  content
+  content,
+  header
 }
 
 function File_:read(iprot)
@@ -159,6 +184,12 @@ function File_:read(iprot)
     elseif fid == 2 then
       if ftype == TType.STRING then
         self.content = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 3 then
+      if ftype == TType.STRING then
+        self.header = iprot:readString()
       else
         iprot:skip(ftype)
       end
@@ -182,6 +213,11 @@ function File_:write(oprot)
     oprot:writeString(self.content)
     oprot:writeFieldEnd()
   end
+  if self.header ~= nil then
+    oprot:writeFieldBegin('header', TType.STRING, 3)
+    oprot:writeString(self.header)
+    oprot:writeFieldEnd()
+  end
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
@@ -190,7 +226,8 @@ Tweet = __TObject:new{
   tweet_id,
   user,
   text,
-  file
+  file,
+  header
 }
 
 function Tweet:read(iprot)
@@ -225,6 +262,12 @@ function Tweet:read(iprot)
       else
         iprot:skip(ftype)
       end
+    elseif fid == 5 then
+      if ftype == TType.STRING then
+        self.header = iprot:readString()
+      else
+        iprot:skip(ftype)
+      end
     else
       iprot:skip(ftype)
     end
@@ -253,6 +296,11 @@ function Tweet:write(oprot)
   if self.file ~= nil then
     oprot:writeFieldBegin('file', TType.STRUCT, 4)
     self.file:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  if self.header ~= nil then
+    oprot:writeFieldBegin('header', TType.STRING, 5)
+    oprot:writeString(self.header)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()

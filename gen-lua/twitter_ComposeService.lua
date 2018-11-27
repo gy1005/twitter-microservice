@@ -9,6 +9,8 @@
 require 'Thrift'
 require 'twitter_ttypes'
 
+local ComposeServiceClient = {}
+
 ComposeServiceClient = __TObject.new(__TClient, {
   __type = 'ComposeServiceClient'
 })
@@ -188,3 +190,5 @@ function getTweet_result:write(oprot)
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
+
+return ComposeServiceClient

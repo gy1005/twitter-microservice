@@ -101,6 +101,8 @@ void ComposeServiceHandler::getTweet(
   _header_return_json.update(_file_header_json);
   _header_return_json.update(_tweet_header_json);
 
+  _return.file.header = "";
+  _return.user.header = "";
 
   add_timestamp("Compose", "compose_end", _header_return_json, nullptr);
   _return.header = _header_return_json.dump(2);
@@ -115,7 +117,7 @@ void ComposeServiceHandler::getTweetHelper_(
 
   auto tweet_client = this->tweet_client_pool_->getClient();
   add_timestamp("Compose", "getTweet_start", header, mtx);
-  tweet_client->getClient()->getTweet_(_return, tweet_id, "");
+  tweet_client->getClient()->getTweet_(_return, tweet_id, "{}");
   add_timestamp("Compose", "getTweet_end", header, mtx);
   this->tweet_client_pool_->returnClient(tweet_client->getId());
 
@@ -128,7 +130,7 @@ void ComposeServiceHandler::getUserHelper_(
 
   auto user_client = this->user_client_pool_->getClient();
   add_timestamp("Compose", "getUser_start", header, mtx);
-  user_client->getClient()->getUser_(_return, user_id, "");
+  user_client->getClient()->getUser_(_return, user_id, "{}");
   add_timestamp("Compose", "getUser_end", header, mtx);
   this->user_client_pool_->returnClient(user_client->getId());
 
@@ -141,7 +143,7 @@ void ComposeServiceHandler::getFileHelper_(
 
   auto file_client = this->file_client_pool_->getClient();
   add_timestamp("Compose", "getFile_start", header, mtx);
-  file_client->getClient()->getFile_(_return, file_id, "");
+  file_client->getClient()->getFile_(_return, file_id, "{}");
   add_timestamp("Compose", "getFile_end", header, mtx);
   this->file_client_pool_->returnClient(file_client->getId());
 

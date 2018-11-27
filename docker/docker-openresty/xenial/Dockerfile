@@ -146,9 +146,11 @@ RUN cd /usr/local/openresty/lualib/src \
     && make \
     && make install
 
+COPY lua-json/json.lua /usr/local/openresty/lualib/json.lua
+
 ENV LUA_PATH=$LUA_PATH;/gen-lua/?.lua
 
-# RUN luarocks install luasocket
+RUN luarocks install luasocket
 
 # Copy nginx configuration files
 COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
