@@ -17,7 +17,7 @@
 docker stop twitter-nginx 
 docker rm twitter-nginx 
 
-# killall UserService
-# killall FileService
-# killall TweetService
-# killall ComposeService
+killall UserService
+killall FileService
+killall TweetService
+killall ComposeService

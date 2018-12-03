@@ -102,3 +102,7 @@ int scan_metric(char *s, uint64_t *n) {
 int scan_time(char *s, uint64_t *n) {
     return scan_units(s, n, &time_units_s);
 }
+
+int scan_time_us(char *s, uint64_t *n) {
+    return scan_units(s, n, &time_units_us);
+}

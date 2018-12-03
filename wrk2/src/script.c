@@ -174,17 +174,33 @@ void script_response_get_latency(lua_State *L, int status, buffer *headers, buff
     // if (err)
     //     fprintf(stderr, "lua_pcall: %s\n", lua_tostring(L,1));
 
-    lua_call(L, 3, 5);    
-   
-    l->if_hit = lua_tointeger(L, -5);
-    l->nginx_lua = lua_tointeger(L, -4);
-    l->get = lua_tointeger(L, -3);
-    l->find = lua_tointeger(L, -2);
-    l->set = lua_tointeger(L, -1);   
+    // Specialized for tweet microservice.
+    lua_call(L, 3, 19);    
+    
+    l->nginx_start = lua_tonumber(L, -19);
+    l->nginx = lua_tointeger(L, -18);
+
+    l->compose_queue = lua_tointeger(L, -17);
+    l->compose_proc = lua_tointeger(L, -16);
+    l->tweet_queue = lua_tointeger(L, -15);
+    l->tweet_proc = lua_tointeger(L, -14);
+    l->user_queue = lua_tointeger(L, -13);
+    l->user_proc = lua_tointeger(L, -12);
+    l->file_queue = lua_tointeger(L, -11);
+    l->file_proc = lua_tointeger(L, -10);
+    l->tweet_mmc_get = lua_tointeger(L, -9);
+    l->tweet_mmc_set = lua_tointeger(L, -8);
+    l->tweet_mongo_find = lua_tointeger(L, -7);
+    l->user_mmc_get = lua_tointeger(L, -6);
+    l->user_mmc_set = lua_tointeger(L, -5);
+    l->user_mongo_find = lua_tointeger(L, -4);
+    l->file_mmc_get = lua_tointeger(L, -3);
+    l->file_mmc_set = lua_tointeger(L, -2);
+    l->file_mongo_find = lua_tointeger(L, -1);
 
     buffer_reset(headers);
     buffer_reset(body);
-    lua_pop(L, 5);    
+    lua_pop(L, 19);    
 }
 
 void script_response(lua_State *L, int status, buffer *headers, buffer *body) {

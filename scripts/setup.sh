@@ -26,14 +26,15 @@ LUA_SCRIPT_PATH=$PWD/../nginx-lua/html/content.lua
 NGINX_CONFIG_PATH=$PWD/../nginx-lua/conf/nginx.conf
 GEN_LUA_PATH=$PWD/../gen-lua
 
+taskset -c 17 ../build/UserService &
+taskset -c 15 ../build/FileService &
+taskset -c 13 ../build/TweetService &
+taskset -c 11,19 ../build/ComposeService &
 
-docker run --net=host \
+
+docker run -d --net=host \
 -v $LUA_SCRIPT_PATH:/usr/local/openresty/nginx/html/content.lua \
 -v $NGINX_CONFIG_PATH:/usr/local/openresty/nginx/conf/nginx.conf \
 -v $GEN_LUA_PATH:/gen-lua \
 --name twitter-nginx yg397/openresty-thrift:xenial
 
-# taskset -c 17 ../build/UserService &
-# taskset -c 15 ../build/FileService &
-# taskset -c 13 ../build/TweetService &
-# taskset -c 11 ../build/ComposeService &

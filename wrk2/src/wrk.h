@@ -47,23 +47,38 @@ typedef struct {
     uint64_t start;
     double throughput;
     uint64_t mean;
-    struct hdr_histogram *latency_histogram;
-    struct hdr_histogram *real_latency_histogram;
-    struct hdr_histogram *nginx_lua_histogram;
-    struct hdr_histogram *get_histogram;
-    struct hdr_histogram *find_histogram;
-    struct hdr_histogram *set_histogram;
-    struct hdr_histogram *real_nginx_lua_histogram;
-    struct hdr_histogram *real_get_histogram;
-    struct hdr_histogram *real_find_histogram;
-    struct hdr_histogram *real_set_histogram;
+
+    struct hdr_histogram* latency_histogram;
+    struct hdr_histogram* real_latency_histogram;
+
+    struct hdr_histogram* nginx_queue_histogram;
+    struct hdr_histogram* nginx_proc_histogram;
+    struct hdr_histogram* compose_queue_histogram;
+    struct hdr_histogram* compose_proc_histogram;
+    struct hdr_histogram* tweet_queue_histogram;
+    struct hdr_histogram* tweet_proc_histogram;
+    struct hdr_histogram* file_queue_histogram;
+    struct hdr_histogram* file_proc_histogram;
+    struct hdr_histogram* user_queue_histogram;
+    struct hdr_histogram* user_proc_histogram;
+
+    struct hdr_histogram* real_nginx_queue_histogram;
+    struct hdr_histogram* real_nginx_proc_histogram;
+    struct hdr_histogram* real_compose_queue_histogram;
+    struct hdr_histogram* real_compose_proc_histogram;
+    struct hdr_histogram* real_tweet_queue_histogram;
+    struct hdr_histogram* real_tweet_proc_histogram;
+    struct hdr_histogram* real_file_queue_histogram;
+    struct hdr_histogram* real_file_proc_histogram;
+    struct hdr_histogram* real_user_queue_histogram;
+    struct hdr_histogram* real_user_proc_histogram;
+
     tinymt64_t rand;
     lua_State *L;
     errors errors;
     struct connection *cs;
     FILE* ff;
-    int memcached_misses;
-    int memcached_hits;    
+    pthread_mutex_t thread_lock;
 } thread;
 
 typedef struct {
@@ -100,11 +115,26 @@ typedef struct connection {
 } connection;
 
 typedef struct latencies {
-    int if_hit;
-    int nginx_lua;
-    int set;
-    int get;
-    int find;
+    uint64_t nginx_start;
+    int nginx;
+    int compose_queue;
+    int compose_proc;
+    int tweet_queue;
+    int tweet_proc;
+    int file_queue;
+    int file_proc;
+    int user_queue;
+    int user_proc;
+    int file_mmc_get;
+    int file_mmc_set;
+    int file_mongo_find;
+    int user_mmc_get;
+    int user_mmc_set;
+    int user_mongo_find;
+    int tweet_mmc_get;
+    int tweet_mmc_set;
+    int tweet_mongo_find;
+
     
 } latencies;
 
